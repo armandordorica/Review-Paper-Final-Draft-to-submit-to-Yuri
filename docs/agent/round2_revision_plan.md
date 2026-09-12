@@ -44,7 +44,7 @@ Work AE not-so-minor and R1 Accept-blocker first, then AE minor reference polish
 | 7 | R2-TAB2 | Not-so-minor / AE | Table utility / LinkedIn | LOCATED | Clarify why Yan et al. 2020 is in the table |
 | 8 | R2-HIST1 | Not-so-minor / AE | Section 3 | PARTIAL | Remove / soften "RL is next step" vs parallel co-evolution |
 | 9 | R2-STATE1 | Reviewer 1 | Section 4.4 / state space | PENDING | Rewrite Markovianity vs Expressiveness cells + SlateQ/PinnerFormer contrast |
-| 10 | R2-ABBR1 | Minor / AE | Introduction | LOCATED | Expand SL at first use |
+| 10 | R2-ABBR1 | Minor / AE | Introduction | DONE | Expanded SL (and RL) at first Intro use |
 | 11 | R2-REF1 | Minor / AE | Bibliography | DONE | Title case → sentence case for cited entries |
 | 12 | R2-REF2 | Minor / AE | Bibliography | DONE (checklist applied) | Preprint → published where available; keeps documented |
 | 13 | R2-REF3 | Minor / AE | Bibliography + tex | DONE | Deduplicated Kang & McAuley 2018 |
@@ -223,11 +223,14 @@ The table formula appears closer to DEAR (Zhao et al. 2021) style.
 
 ### R2-ABBR1 — Expand SL (AE)
 
-**Location:** Introduction ~line 102 (first "SL" use); "supervised machine learning" appears earlier (~line 99) without "(SL)".
-
-**Plan:** On first mention, write `supervised learning (SL)` (or attach `(SL)` to the earlier supervised-ML sentence), then use SL thereafter. Sweep for any other undefined abbreviations introduced in Intro.
-
-**Approval needed before prose edit.**
+**Status:** DONE (12-Sep-2026). First Intro use is now
+`supervised learning (SL)`; first visible Intro use of RL is now
+`Reinforcement learning (RL)`. MDP was already expanded. Follow-up
+manuscript-wide first-use pass also expanded previously bare acronyms
+(abstract MDP; CPM/CPC/CPA; UCB; CTR/pCTR; DIN/SASRec; AUC; LinUCB;
+RegCB; NDCG; KPI; HDQN/AC/GGI/DDPG). Re-audit of common domain acronyms
+reports 0 remaining first-use-before-definition issues. Proper names
+such as REINFORCE and UCB1 left as named algorithms.
 
 ---
 
@@ -430,6 +433,14 @@ Associate Editor — minor points
    which discusses CPM alongside the shift to CPC/CPA and was already
    used in the same historical paragraph.
 
+5b. Abbreviations (including SL)
+   Done. In the Introduction, we expanded supervised learning (SL) and
+   reinforcement learning (RL) at first use. Markov Decision Process
+   (MDP) was already defined on first appearance. We also completed a
+   manuscript-wide pass so acronyms are expanded before subsequent
+   abbreviated uses (including pricing metrics, CTR/pCTR, UCB-family
+   methods, DIN/SASRec, NDCG/KPI/AUC, and evaluation-table baselines).
+
 ----------------------------------------------------------------
 Associate Editor — not-so-minor points
 ----------------------------------------------------------------
@@ -475,6 +486,17 @@ author–year in-text citations to ACM numbered citations. Citations in
 the text now appear as numbers (for example, [44] rather than
 [Kang and McAuley 2018]), and the reference list is numbered in ACM
 Reference Format.
+```
+
+**Abbreviations paragraph (standalone):**
+
+```text
+Regarding abbreviations: we expanded supervised learning (SL) and
+reinforcement learning (RL) at first use in the Introduction, and we
+completed a manuscript-wide pass so acronyms are introduced in full
+before later abbreviated uses (including MDP, pricing metrics such as
+CPM/CPC/CPA, CTR/pCTR, UCB-family methods, DIN/SASRec, and common
+evaluation metrics and baselines).
 ```
 
 ---

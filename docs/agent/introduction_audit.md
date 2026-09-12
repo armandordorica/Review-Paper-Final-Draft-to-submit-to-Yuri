@@ -2,7 +2,13 @@
 
 Scope: `paper.tex`, `\section{Introduction}` (currently lines 91-121).
 
-Latest refresh: May 17, 2026, after the P0+P1 resolution pass that landed I1-I6 (citation mismatch removed, over-monetization claim anchored, extreme words softened, single-sentence opener paragraphs merged). Builds on the earlier comprehensive audit covering the three-difficulties paragraph (line 96), the SL paradigm paragraph (line 99 area), the SL-limitations sentence, the RL-as-solution paragraph, the gap paragraph opener, the contributions paragraph, and the FrozenLake preview removal.
+Latest refresh: 12-Sep-2026 — R2-ABBR1: expanded SL and RL at first Introduction use (MDP already defined). Round-1 May 17 pass (I1–I6) remains the baseline for other Intro items.
+
+## Round-2 resolved
+
+- **R2-ABBR1 (DONE).** AE: *"Make sure all abbreviations are properly introduced, including SL in the introduction."* First Intro uses are now `supervised learning (SL)` and `Reinforcement learning (RL)`; `Markov Decision Process (MDP)` was already expanded. Intro acronym sweep found only these three short forms.
+
+- **Paper-wide acronym first-use pass (DONE, 12-Sep-2026).** Expanded acronyms that previously appeared before definition, including abstract MDP; table CPM/CPC/CPA and supervised ML; notation-table UCB; CTR/pCTR table wording; DIN, SASRec, AUC, LinUCB, RegCB, NDCG, KPI; and evaluation-table HDQN, AC, GGI, DDPG. Left proper algorithm names (e.g., REINFORCE, UCB1) and later repeat uses abbreviated after first expansion.
 
 ## Reviewer context used
 
