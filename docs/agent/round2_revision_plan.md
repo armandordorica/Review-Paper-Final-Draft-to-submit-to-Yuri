@@ -7,7 +7,7 @@
 **Prior round (for context only):** `docs/agent/reviewers.txt` responds to `original_submission_paper.pdf`  
 **Working rule:** One-by-one approval. Propose each change, wait for explicit go-ahead, then edit. Do not change `paper.tex` / `bibliography.bib` until approved.
 
-Latest refresh: 12-Sep-2026 — R2-REF1/2/3/5 applied (title casing + preprint/weak-source polish + Kang dedupe + Wikipedia CPM); reviewer-response draft updated accordingly. Remaining: DOIs/AI disclosure, claim softens, tables, Section 3, R1 taxonomy, numbered cites.
+Latest refresh: 12-Sep-2026 — R2-REF1/2/3/4/5 applied (title casing + preprint polish + Kang dedupe + numbered cites + Wikipedia CPM). Remaining: DOIs/AI disclosure, claim softens, tables, Section 3, R1 taxonomy.
 
 ---
 
@@ -48,7 +48,7 @@ Work AE not-so-minor and R1 Accept-blocker first, then AE minor reference polish
 | 11 | R2-REF1 | Minor / AE | Bibliography | DONE | Title case → sentence case for cited entries |
 | 12 | R2-REF2 | Minor / AE | Bibliography | DONE (checklist applied) | Preprint → published where available; keeps documented |
 | 13 | R2-REF3 | Minor / AE | Bibliography + tex | DONE | Deduplicated Kang & McAuley 2018 |
-| 14 | R2-REF4 | Minor / AE | Global style | PENDING APPROVAL | Switch author-year → numbered citations |
+| 14 | R2-REF4 | Minor / AE | Global style | DONE | Switched author-year → numbered citations (`acmnumeric`) |
 | 15 | R2-REF5 | Minor / AE | History / CPM | DONE | Wikipedia CPM → hu2004performance |
 | 16 | R2-COVER | Submission | Cover letter | DRAFTED | Draft response letter in plan (incl. Horizon keep-as-arXiv explanation) |
 
@@ -327,13 +327,11 @@ found (DIN vs DIEN and other 2018a/b pairs are distinct works).
 
 ### R2-REF4 — Numbered references (AE)
 
-**Current:** `\citestyle{acmauthoryear}` in `paper.tex` line 8.
-
-**Plan:** Switch to `\citestyle{acmnumeric}` (or ACM numeric equivalent under `acmart`). Recompile and fix any prose that depends on author-year narrative ("as shown by Smith et al. (2019)") that becomes awkward with numbers.
-
-**Risk:** medium (global style change; many narrative citations may need light rephrasing).
-
-**Approval needed before style switch.** Confirm with user whether they want numeric style despite prior author-year drafting.
+**Status:** DONE (12-Sep-2026). Switched `\citestyle{acmauthoryear}` →
+`\citestyle{acmnumeric}` in `paper.tex`. In-text cites render as numbers;
+reference list remains ACM-Reference-Format. Spot-checked narrative
+author+cite constructions (e.g., “Zhao et al.\ \cite{…}”) which become
+“Zhao et al.\ [n]” and remain grammatical.
 
 ---
 
@@ -421,8 +419,10 @@ Associate Editor — minor points
    (`kang2018sasrec`) and retargeted the duplicate in-text cite.
 
 4. Numbered references
-   [Planned:] Not yet applied; awaiting confirmation whether to switch
-   from author–year to numbered citation style for this revision.
+   Done. Switched the manuscript from ACM author–year to ACM
+   numbered citation style (`\citestyle{acmnumeric}`). In-text
+   citations now appear as numbers; the reference list remains in
+   ACM Reference Format.
 
 5. Wikipedia CPM citation
    Done. Replaced the Wikipedia “Cost per mille” citation with Hu
@@ -478,7 +478,7 @@ Meta Research’s publication page for the same work.
 5. Approve **R2-HIST1** after locating the remaining "next step" sentence.
 6. Approve **R2-STATE1** rewrite (largest prose/table rewrite).
 7. Approve bibliography polish (**R2-REF3**, **R2-REF5**, then **R2-REF1**, **R2-REF2**).
-8. Approve **R2-REF4** numeric citation switch (last style change before compile).
+8. **R2-REF4** numeric citation switch — DONE.
 9. Compile via README timestamped workflow; spot-check PDF.
 10. Draft **R2-COVER**; user review; then commit/push only when asked.
 

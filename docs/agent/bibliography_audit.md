@@ -2,11 +2,11 @@
 
 Scope: `bibliography.bib` (and rendered References in timestamped PDFs).
 
-Latest refresh: 12-Sep-2026 (AE minor: title casing + preprint polish + Kang dedupe + Wikipedia CPM).
+Latest refresh: 12-Sep-2026 (AE minor: title casing + preprint polish + Kang dedupe + Wikipedia CPM + numbered cites).
 
 ## Reviewer context used
 
-- **Associate Editor (round 2):** title casing; replace preprints; dedupe Kang; replace Wikipedia CPM; wrong DOIs (separate).
+- **Associate Editor (round 2):** title casing; replace preprints; dedupe Kang; numbered references; replace Wikipedia CPM; wrong DOIs (separate).
 - Full letter: `docs/agent/reviewers_round2.txt`.
 - Plan: `docs/agent/round2_revision_plan.md`.
 - Checklist progress: `docs/agent/preprint_checklist_progress.json`.
@@ -21,9 +21,10 @@ Latest refresh: 12-Sep-2026 (AE minor: title casing + preprint polish + Kang ded
 
 - **R2-REF5 (DONE).** History paragraph Wikipedia CPM cite → `hu2004performance`; removed `wikipedia-cpm` bib entry.
 
+- **R2-REF4 (DONE).** Switched `\citestyle{acmauthoryear}` → `\citestyle{acmnumeric}` so in-text citations are numbered.
+
 - **Extra dedupe (DONE, 12-Sep-2026).** Removed uncited exact clone `zhou2019deep` of cited `Zhou2019` (DIEN / AAAI 2019). Broader scan of cited keys found no other same-paper duplicates; `Zhou2018` (DIN) vs `Zhou2019` (DIEN) and other 2018a/2018b pairs (Wu, Zhao) are distinct papers.
 
 ## Pending (other AE bibliography items)
 
 - **R2-DOI1.** Fix confirmed wrong DOIs (`zhao2020jointly`, `wen2019learning`, `Mehrotra2020`, `Stigler1950`).
-- **R2-REF4.** Switch to numbered citations (`acmnumeric`) — awaiting author confirmation.
