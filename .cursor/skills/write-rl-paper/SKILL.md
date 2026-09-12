@@ -151,6 +151,18 @@ Naming an artifact without citing its source is a reviewer-flag risk.
 ### G. LaTeX-Ready Format
 Use `\cite{authorYear}` syntax for all placeholders so the output drops into `paper.tex` without rewriting. Match the bibliography file's existing key style (lowercase, no whitespace).
 
+### H. Bibliography Title Casing (ACM Reference Format)
+Use **sentence case** for article and paper titles in `bibliography.bib` (the titles that appear in the References section). Do not use Title Case for cited-work titles.
+
+- Capitalize the first word of the title and the first word after a colon when it begins a subtitle.
+- Capitalize proper nouns and their derivatives (e.g., Google, Instagram, Meta, Thompson, Yahoo, Overture).
+- Capitalize product or system names that are proper nouns (e.g., SlateQ).
+- Keep acronyms in their conventional form (e.g., PPC, CTR, RL, ACM, IEEE). Protect required capitals with braces in BibTeX, e.g., `title = {A tutorial on {Thompson} sampling}` or `title = {{SlateQ}: A tractable decomposition...}`.
+- Keep short function words lowercase unless they start the title or subtitle (a, an, the, and, or, of, in, on, for, to, with, via, by, from, at, as).
+- The manuscript's own `\title{}` remains mixed / title case per ACM metadata guidance; this sentence-case rule applies only to **cited** titles in the reference list.
+- Current `ACM-Reference-Format.bst` preserves whatever casing is in the `.bib` file, so consistency must be maintained in the source entries, not left to the style file.
+- When adding or editing a bib entry, match the sentence-case convention already used by the majority of cited titles in this project (AE round-2: "use upper-case and lower-case notations consistently").
+
 ## 8. Output Constraints and Style
 *   **No Conversational Filler:** Do not open with introductory greetings or meta-commentary. Begin your analysis on the first line.
 *   **No Generic Summaries:** Do not provide generic summaries at the end of a response. If a conclusion is necessary, it must deliver a strategic recommendation or highlight the most critical vulnerability.

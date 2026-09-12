@@ -1,0 +1,120 @@
+Dear Armando Ordorica:
+
+Apologies for the delay in getting back to you. The Associate Editor in charge of your paper has recommended a decision of minor revision. The requested revisions are outlined in the comments from the Associate Editor handling your manuscript and from the reviewers.
+
+Please read the reviews carefully and then submit your revision by 04-Oct-2026.
+
+To submit your revision, please log into https://mc.manuscriptcentral.com/tors and enter your Author Center, where you will find your manuscript title listed under "Manuscripts with Decisions."  Under "Action," click on "Create a Revision."  Your manuscript number has been appended to denote a revision.
+
+Please also include a cover letter explaining the changes you have made.
+
+I look forward to receiving your revised paper.
+
+Regards,
+
+Prof. Dietmar Jannach
+Editor in Chief, ACM Transactions on Recommender Systems
+
+Please find below the comments of the Associate Editor:
+Associate Editor
+Comments to the Author (required):
+Apologies again for the delay. I received one review and looked at the paper by myself.
+
+The paper has been substantially improved in this revision, and it has strong potential to provide a helpful reference point for readers.
+
+Beside the aspects mentioned by the reviewer, a number of minor and not-so-minor issues however have to be resolved.
+
+Minor:
+References need polishing.
+- Please use upper-case and lower-case notations consistently
+- Replace references to preprints with references to published papers
+- Kang & McAuley 2018 is repeated
+- Use numbered references in the text
+- "Wikipedia contributors." -> Please find a better reference to CPM
+
+Make sure all abbreviations are properly introduced, including SL in the introduction
+
+Not-so-minor:
+
+Some DOIs in the references are pointing to the wrong papers (which I assume is a result of AI use, which should be declared in the paper), e.g. Mehrotra et al, 2018, Wen et al., 2019, Zhao et al., 2020, and others
+
+Check which papers are referenced for which claim throughout. This issue from the first version seems to persist to some extent, e.g., "Rather than replacing SL, RL can be viewed as embedding supervised prediction within a sequential control framework [Chen
+et al. 2022]." -> Not sure where this is indicated in the provided reference; the technical definition itself should be double-checked and potentially revised as well. Maybe avoid the term "supervised prediction" here.
+
+The introduction says: "Second, RL leverages off-policy estimators that re-weight observed trajectories
+under a candidate policy to evaluate counterfactual trajectories from logged data ..." I don't think this is generally true, but maybe only for specific RL implementations. Please check.
+
+The statement "First, SL ignores policy-induced distribution shifts" is maybe also too strong in general.
+
+In Section 3, the paper somehow suggests a progression from heuristics to supervised ML to deep learning to bandits and RL. While the paper states (close to Fig 1) that things happen in parallel, it also somewhere says that RL is the next step to ad modeling. Please double-check.
+
+The summary of the blended reward /utility of Zhao et al. 2020 in Table 6 (last column) should be checked; the formulas shown here should be close to what is reported in the original paper. Please check if any confusion between Zhao et al 2020 and Zhao et al 2021 maybe have happened as well.
+
+The LinkedIn system (Yan et al., 2020), which is referred to multiple times in the text, does not seem to be an RL-based system. While the text mentions that is based on constrained optimization in Table 6, it is a bit unclear why the system is discussed in Table 6 in the first place, given that the paper is about RL-based systems. A clarification seems necessary.
+
+Please find below the comments from the reviewers of your paper:
+Reviewer: 1
+
+Recommendation: Accept
+
+Comments:
+Thanks for this much improved second draft, which I recommend for acceptance.
+
+Your paper is now a useful, accessible primer on the important topic of joint optimisation of advertisements and organic content. I found the paper enjoyable to read, with clear signposts and taxonomies guiding the reader through the literature. The discussion of trade-offs and the grounding of theory with experimental results was another strength.
+
+The only real stumbling point was Section 4.4. Here, the taxonomy of state space representation could be used better. I agree with separating Markovianity and Expressiveness as different concepts, they end up yielding very similar values that don't really illuminate the reader at all.  PinnerFormer's Markovianity explained as "Fixed-size embedding summarizing multi-week engagement trajectory" vs Expressivity described as "single user embedding capturing long-term preference structure". TransAct "Long-term embedding combined with real-time session sequence" vs "Session sequence plus long-term embedding covering both horizons". This would be pretty straightforward to fix. Markovianity on how well the past history is compressed into the representation for predicting next states, e.g. PinnerFormer could say something about how "self-attention over multi-week sequences renders the transition probabilities conditionally independent" and Expressivity on missing information, like "pure user-side that misses page-level contextual features" (if that's true!).
+The section would also benefit from a crisper contrast between SlateQ's immediate "slate-so-far" state and PinnerFormer's long-term user history state. I think this was somewhat buried. Expanding the discussion and making this more explicit would help the reader to grasp the practical differences and the wide choice possible in this domain.
+
+Additional Questions:
+What is the key contribution of this paper?: A synoptic survey of Reinforcement Learning, with a particular focus on the joint optimization of advertisements and organic content. There is much useful guidance for practitioners, including those in industry. This is grounded in reported results with a good discussion of trade-offs.
+
+Relevance to the journal (<a href="https://dl.acm.org/journal/tors" target="_blank">TORS Scope Statement</a>): Excellent
+
+Comparison with previous and related works (Consider, for example: Are previous and related works adequately discussed? Are the relations of previous work to the current work clear?): Excellent
+
+a) Novelty
+
+(Comment on the novelty of the idea, and the methods and techniques proposed): Good
+
+Novelty and potential for innovation details: The idea for a survey paper focusing on industrial usage of RL techniques for the particular task of balancing advertising and organic content goes beyond previous literature and is highly interesting. The structure of the paper, looking at trade-offs and providing explicit guidance for practioners is itself a little bit novel.
+
+b) Soundness
+
+(Comment on the soundness of the idea, and the methods and techniques proposed.): Excellent
+
+soundness details: This is a survey paper. The survey methodology is systematic and seems likely to yield good coverage of the topic, although of course there may be some undetected gaps.
+
+When the paper describes methods and techniques, this is done concisely yet accurately with a clear common framework and notation.
+
+c) Experimental evaluation [<a href="https://docs.google.com/document/d/13VwSGuFAvgPlobj2J7CC8s_bBv84YjHUK_OhCYfJvq0/edit?usp=sharing" target="_blank">Important guidelines</a>]:
+
+(Do the authors use an appropriate methodology and suitable statistical methods? Is the choice of datasets, baseline methods and evaluation metrics in empirical comparisons well justified? Have all compared models in offline experiments been systematically tuned?): Good
+
+Experimental evaluation details: The paper clearly and accurately explains how evaluations are typically made in the field, including in industrial settings where e.g. offline validations are used to gate deployments. There is a clear synthesis of experimental evaluation metrics, explaining their hierarchy (primary, secondary and guardrails). There is a helpful table in the final section that reports some quantitative results from real-world industrial systems. While they can't be compared to one another, it's a useful 'at-a-glance' resource.
+
+d) Theoretical background and evaluation:
+
+(Have the research questions and hypotheses been made explicit? Have all claims been substantiated through empirical evidence, theoretical considerations, or proofs?): Good
+
+Theoretical background and evaluation details: Solid description of MDPs, value- vs policy-based RL, etc that are tied to the problem of jointly ranking advertising and recommendation content. The trade-offs implied by each method, and by things like off- vs on-policy learning are crisply covered. Empirical evidence (though limited) is provided by citations to industrial papers.
+
+Some sections could benefit from crisper comparisons, e.g. with more explanation of the fundamental differences in representation between SlateQ and the user-embedding-based models.
+
+e) Reproducibility [<a href="https://docs.google.com/document/d/13VwSGuFAvgPlobj2J7CC8s_bBv84YjHUK_OhCYfJvq0/edit?usp=sharing" target="_blank">Important guidelines</a>]
+
+(In case of offline experiments, do the authors share the code and data to reproduce the findings? Does the shared material include scripts for preprocessing and tuning, are hyper-parameters documented? Does the shared code include the code for the baselines? In case of user studies, is the collected data shared?): Not Applicable
+
+Reproducibility details: The authors point out the problems of reproducibility in this field.
+
+Presentation:
+
+(Comment about the quality of English and the structure of the paper: Are there parts that should be rewritten, expanded upon, or dropped? Is the paper concise?): Excellent
+
+Reasons to accept (Provide 1-3 concise bulleted-list items.): - This paper will provide a useful and accessible introduction to people beginning work on this important topic.
+- The arguments are clearly set out, and the limits of published research are noted where necessary.
+- Good guidance to practioners, and discussion of typical practise and rules-of-thumb
+
+Reasons to revise/reject (Provide 1-3 concise bulleted-list items.): - Use of the taxonomy of state space representation could be improved. While Markovianity and Expressiveness are different concepts, they yield very similar values, e.g. PinnerFormer's "Fixed-size embedding summarizing multi-week engagement trajectory" vs "single user embedding capturing long-term preference structure". TransAct "Long-term embedding combined with real-time session sequence" vs "Session sequence plus long-term embedding covering both horizons". The authors should focus Markovianity on how well the past history is compressed into the representation for predicting next states and Expressivity on whether it captures all the useful dimensions.
+- The same section would benefit from a crisper contrast between SlateQ's immediate "slate-so-far" state and PinnerFormer's long-term user history state. Expanding the discussion and making this more explicit would help the reader to grasp the practical differences and the wide choice possible in this domain.
+
+Does this paper have potential real world significance?: Yes

@@ -196,6 +196,13 @@ If the answer to any of (1)-(3) is "no", rewrite to anchor the sentence in the d
 - If the citation appears at the end of the sentence, place it in parentheses before the period.
 - Be consistent in punctuation and formatting of **et al.**
 
+### Bibliography Title Casing
+- Use **sentence case** for article and paper titles in `bibliography.bib` (References section), not Title Case.
+- Capitalize the first word, the first word after a colon when it starts a subtitle, proper nouns (Google, Instagram, Meta, Thompson, Yahoo, Overture), system names (SlateQ), and acronyms (PPC, CTR, RL).
+- Protect required capitals with BibTeX braces, e.g., `{Thompson}`, `{SlateQ}`, `{PPC}`.
+- The paper's own `\title{}` stays mixed / title case; sentence case applies only to cited-work titles.
+- `ACM-Reference-Format.bst` preserves `.bib` casing, so enforce consistency in the source entries.
+
 ### Emphasis and Bold
 
 Per the ACM TORS Associate Editor's feedback (item 12 in the reviewer checklist above), bold-face text must be used sparingly. Apply the following rule during every edit:
