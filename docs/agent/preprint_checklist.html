@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Round-2 preprint checklist</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --card: #fffdf8;
+      --ink: #1c1917;
+      --muted: #57534e;
+      --line: #e7e0d4;
+      --accent: #0f766e;
+      --accent-soft: #ccfbf1;
+      --warn: #b45309;
+      --warn-soft: #ffedd5;
+      --ok: #166534;
+      --ok-soft: #dcfce7;
+      --skip: #6b7280;
+      --skip-soft: #f3f4f6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, #efe6d5 0, transparent 40%),
+        var(--bg);
+      line-height: 1.45;
+    }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(8px);
+      background: rgba(246,244,239,0.92);
+      border-bottom: 1px solid var(--line);
+      padding: 1rem 1.25rem;
+    }
+    header h1 { margin: 0 0 0.25rem; font-size: 1.25rem; letter-spacing: -0.02em; }
+    header p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+      margin-top: 0.75rem;
+    }
+    .toolbar select, .toolbar input[type="search"], .toolbar button, .card input, .card textarea, .card select {
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0.4rem 0.6rem;
+      background: white;
+    }
+    .toolbar button, .card button {
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .toolbar button.secondary { background: white; color: var(--ink); border-color: var(--line); }
+    .stats { margin-left: auto; font-size: 0.9rem; color: var(--muted); }
+    main { max-width: 980px; margin: 0 auto; padding: 1rem 1.25rem 3rem; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin: 0.75rem 0;
+      box-shadow: 0 1px 0 rgba(28,25,23,0.03);
+    }
+    .card.done { opacity: 0.72; border-color: #86efac; background: #f7fff8; }
+    .card.keep { border-color: #d6d3d1; }
+    .card.toprow {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.75rem;
+      align-items: start;
+    }
+    .key { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92rem; }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      margin-right: 0.35rem;
+    }
+    .badge.arxiv { background: var(--warn-soft); color: var(--warn); }
+    .badge.industry-web { background: #e0e7ff; color: #3730a3; }
+    .badge.wikipedia { background: #fee2e2; color: #991b1b; }
+    .badge.suggested { background: var(--accent-soft); color: var(--accent); }
+    .badge.needs-research { background: var(--skip-soft); color: var(--skip); }
+    .badge.already-published { background: var(--ok-soft); color: var(--ok); }
+    .title { font-weight: 600; margin: 0.2rem 0; }
+    .meta { color: var(--muted); font-size: 0.88rem; }
+    .links a { color: var(--accent); margin-right: 0.75rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+    label.field { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.82rem; color: var(--muted); }
+    label.field span { font-weight: 600; color: var(--ink); }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin-top: 0.75rem; }
+    .actions button.keep { background: #44403c; border-color: #44403c; }
+    .actions button.reset { background: white; color: var(--ink); border-color: var(--line); }
+    .suggest-box {
+      margin-top: 0.65rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 10px;
+      background: #f0fdfa;
+      border: 1px dashed #99f6e4;
+      font-size: 0.86rem;
+      color: var(--ink);
+    }
+    .suggest-box.empty {
+      background: var(--skip-soft);
+      border-color: #d6d3d1;
+      color: var(--muted);
+    }
+    .suggest-box code {
+      font-size: 0.84rem;
+      background: rgba(255,255,255,0.7);
+      padding: 0.05rem 0.3rem;
+      border-radius: 4px;
+    }
+    .flash {
+      font-size: 0.85rem; font-weight: 600; color: var(--accent);
+      animation: fadeFlash 1.6s ease-out;
+    }
+    .flash.muted { color: var(--muted); font-weight: 500; }
+    @keyframes fadeFlash {
+      0% { opacity: 1; }
+      70% { opacity: 1; }
+      100% { opacity: 0.35; }
+    }
+    input.just-loaded, textarea.just-loaded {
+      outline: 2px solid var(--accent);
+      background: var(--accent-soft);
+    }
+    .decision {
+      font-size: 0.85rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px;
+    }
+    .decision.replace { background: var(--ok-soft); color: var(--ok); }
+    .decision.keep { background: var(--skip-soft); color: var(--skip); }
+    .decision.pending { background: var(--warn-soft); color: var(--warn); }
+    textarea { min-height: 2.6rem; resize: vertical; }
+    .export {
+      white-space: pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      background: #1c1917;
+      color: #f5f5f4;
+      padding: 0.9rem;
+      border-radius: 10px;
+      display: none;
+      margin-top: 0.75rem;
+    }
+    footer { color: var(--muted); font-size: 0.85rem; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Round-2 preprint / weak-source checklist</h1>
+    <p>
+      Tick items, record replacement venue/DOI/URL, and export decisions for the agent.
+      Progress is saved in this browser via <code>localStorage</code>
+      (<strong>hard-refresh keeps your ticks</strong>; only
+      <em>Clear saved progress</em> wipes them).
+      Use <em>Download backup</em> to save a JSON file you can re-import later.
+    </p>
+    <div class="toolbar">
+      <select id="filterKind">
+        <option value="all">All kinds</option>
+        <option value="arxiv">arXiv preprints</option>
+        <option value="industry-web">Industry / web</option>
+        <option value="wikipedia">Wikipedia</option>
+        <option value="already-published">Already published (arxiv URL only)</option>
+      </select>
+      <select id="filterDecision">
+        <option value="all">All decisions</option>
+        <option value="pending">Pending</option>
+        <option value="replace">Mark replace</option>
+        <option value="keep">Keep as-is</option>
+      </select>
+      <input id="search" type="search" placeholder="Filter by key or title…" style="min-width:14rem" />
+      <button class="secondary" id="btnExport">Export decisions JSON</button>
+      <button class="secondary" id="btnCopy">Copy for chat</button>
+      <button class="secondary" id="btnBackup">Download backup</button>
+      <button class="secondary" id="btnImport">Import backup…</button>
+      <input id="importFile" type="file" accept="application/json,.json" style="display:none" />
+      <button class="secondary" id="btnFillEmpty">Fill empty fields from suggestions</button>
+      <button class="secondary" id="btnClear">Clear saved progress</button>
+      <div class="stats" id="stats"></div>
+    </div>
+    <pre class="export" id="exportBox"></pre>
+  </header>
+  <main id="list"></main>
+  <footer style="max-width:980px;margin:0 auto;padding:0 1.25rem 2rem">
+    Open this file in a browser:
+    <code>docs/agent/preprint_checklist.html</code>.
+    After you mark replacements, paste the export into chat and ask me to apply them to <code>bibliography.bib</code> / <code>paper.tex</code>.
+    <br/><strong>DOI note:</strong> only a few of these have a real published DOI.
+    Most industrial tech reports / canonical arXiv surveys legitimately have none — venue + URL is enough.
+    Suggested DOI (when known) is shown on each card; click <em>Load suggestion</em> to copy it into the form.
+  </footer>
+
+  <script>
+    // Embedded snapshot of cited preprint / weak sources (refreshed 2026-09-12 afternoon: Google/ACM/CEUR links)
+    const ITEMS = [
+  {
+    "id": "carrion2021blending",
+    "kind": "arxiv",
+    "year": "2021",
+    "title": "Blending advertising with organic content in e-commerce: A virtual bids optimization approach",
+    "authors": "Carrion, Carlos et al.",
+    "journal": "arXiv preprint arXiv:2105.13556",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/2105.13556",
+    "suggested_venue": "AAAI 2023",
+    "suggested_doi": "10.1609/aaai.v37i13.26835",
+    "suggested_url": "https://doi.org/10.1609/aaai.v37i13.26835",
+    "suggested_note": "Published AAAI-23; update title to …via Virtual Bids; pages 15476–15484"
+  },
+  {
+    "id": "dudik2011doubly",
+    "kind": "arxiv",
+    "year": "2011",
+    "title": "Doubly robust policy evaluation and learning",
+    "authors": "Dudík, Miroslav; Langford, John; Li, Lihong",
+    "journal": "arXiv preprint arXiv:1103.4601",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1103.4601",
+    "suggested_venue": "ICML 2011 (ACM DL proceedings)",
+    "suggested_doi": "10.5555/3061053.3061129",
+    "suggested_url": "https://dl.acm.org/doi/10.5555/3061053.3061129",
+    "suggested_note": "Published ICML 2011, pp. 1097–1104. Prefer ACM DL DOI 10.5555/3061053.3061129 (also: https://icml.cc/Conferences/2011/papers/554_icmlpaper.pdf). Mark: replace."
+  },
+  {
+    "id": "dulac2019challenges",
+    "kind": "arxiv",
+    "year": "2019",
+    "title": "Challenges of real-world reinforcement learning",
+    "authors": "Dulac-Arnold, Gabriel; Mankowitz, Daniel; Hester, Todd",
+    "journal": "arXiv preprint arXiv:1904.12901",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1904.12901",
+    "suggested_venue": "Machine Learning (Springer) 2021",
+    "suggested_doi": "10.1007/s10994-021-05961-4",
+    "suggested_url": "https://doi.org/10.1007/s10994-021-05961-4",
+    "suggested_note": "Retarget paper.tex cites to existing key dulac2021challenges (already published; add this DOI to that bib entry)."
+  },
+  {
+    "id": "gauci2018horizon",
+    "kind": "arxiv",
+    "year": "2018",
+    "title": "Horizon: Facebook's open source applied reinforcement learning platform",
+    "authors": "Gauci, Jason et al.",
+    "journal": "arXiv preprint arXiv:1811.00260",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1811.00260",
+    "suggested_venue": "ICML 2019 RL4RealLife workshop (no proceedings)",
+    "suggested_doi": "",
+    "suggested_url": "https://openreview.net/forum?id=SylQKinLi4",
+    "suggested_note": "Workshop only, no archival proceedings. Keep arXiv:1811.00260 as canonical; optional secondary URL OpenReview / ML Anthology. Mark: keep as-is (optional note workshop in bib)."
+  },
+  {
+    "id": "ie2019recsim",
+    "kind": "arxiv",
+    "year": "2019",
+    "title": "RecSim: A configurable simulation platform for recommender systems",
+    "authors": "Ie, Eugene et al.",
+    "journal": "arXiv preprint arXiv:1909.04847",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1909.04847",
+    "suggested_venue": "arXiv / Google Research tech report (2019)",
+    "suggested_doi": "",
+    "suggested_url": "https://research.google/pubs/recsim-a-configurable-simulation-platform-for-recommender-systems/",
+    "suggested_note": "No archival conference version. Do not swap to RecSys’20 RecSim NG. Keep arXiv; optional Google Research URL. Mark: keep as-is."
+  },
+  {
+    "id": "ie2019reinforcement",
+    "kind": "arxiv",
+    "year": "2019",
+    "title": "Reinforcement learning for slate-based recommender systems: A tractable decomposition and practical methodology",
+    "authors": "Ie, Eugene et al.",
+    "journal": "arXiv preprint arXiv:1905.12767",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1905.12767",
+    "suggested_venue": "IJCAI 2019 (SlateQ)",
+    "suggested_doi": "10.24963/ijcai.2019/360",
+    "suggested_url": "https://doi.org/10.24963/ijcai.2019/360",
+    "suggested_note": "Prefer existing key ie2019slateq for SlateQ claims"
+  },
+  {
+    "id": "kang2018sasrec",
+    "kind": "already-published",
+    "year": "2018",
+    "title": "Self-attentive sequential recommendation",
+    "authors": "Kang, Wang-Cheng; McAuley, Julian",
+    "journal": "ICDM 2018 (already in bib) + arXiv PDF URL",
+    "url": "https://arxiv.org/pdf/1808.09781",
+    "doi": "10.1109/ICDM.2018.00035",
+    "arxiv_abs": "https://arxiv.org/abs/1808.09781",
+    "suggested_venue": "ICDM 2018 (IEEE)",
+    "suggested_doi": "10.1109/ICDM.2018.00035",
+    "suggested_url": "https://ieeexplore.ieee.org/document/8594844",
+    "suggested_note": "Already published ICDM 2018. Replace arXiv PDF url with IEEE Xplore; also dedupe Kang2018 key (R2-REF3). Mark: replace (URL cleanup)."
+  },
+  {
+    "id": "kuleshov2014algorithms",
+    "kind": "arxiv",
+    "year": "2014",
+    "title": "Algorithms for multi-armed bandit problems",
+    "authors": "Kuleshov, Volodymyr; Precup, Doina",
+    "journal": "arXiv preprint arXiv:1402.6028",
+    "url": "https://arxiv.org/abs/1402.6028",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1402.6028",
+    "suggested_venue": "",
+    "suggested_doi": "",
+    "suggested_url": "https://arxiv.org/abs/1402.6028",
+    "suggested_note": "No journal/conference version found beyond arXiv. Mark: keep as-is."
+  },
+  {
+    "id": "lambert2023entangled",
+    "kind": "arxiv",
+    "year": "2023",
+    "title": "Entangled preferences: The history and risks of reinforcement learning and human feedback",
+    "authors": "Lambert, Nathan; Gilbert, Thomas Krendl; Zick, Tom",
+    "journal": "arXiv preprint arXiv:2310.13595",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/2310.13595",
+    "suggested_venue": "arXiv only (title fix)",
+    "suggested_doi": "",
+    "suggested_url": "https://arxiv.org/abs/2310.13595",
+    "suggested_note": "Keep as arXiv. Fix bib title to current arXiv title: “The history and risks of reinforcement learning and human feedback” (drop “Entangled preferences:”). Mark: keep as-is + title cleanup."
+  },
+  {
+    "id": "levine2020offline",
+    "kind": "arxiv",
+    "year": "2020",
+    "title": "Offline reinforcement learning: Tutorial, review, and perspectives on open problems",
+    "authors": "Levine, Sergey; Kumar, Aviral; Tucker, George; Fu, Justin",
+    "journal": "arXiv preprint arXiv:2005.01643",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/2005.01643",
+    "suggested_venue": "",
+    "suggested_doi": "",
+    "suggested_url": "https://arxiv.org/abs/2005.01643",
+    "suggested_note": "Canonical offline-RL survey; still arXiv only. Mark: keep as-is."
+  },
+  {
+    "id": "liu2022monolith",
+    "kind": "arxiv",
+    "year": "2022",
+    "title": "Monolith: real time recommendation system with collisionless embedding table",
+    "authors": "Liu, Zhuoran et al.",
+    "journal": "arXiv preprint arXiv:2209.07663",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/2209.07663",
+    "suggested_venue": "ORSUM@RecSys 2022 (CEUR-WS Vol. 3303)",
+    "suggested_doi": "",
+    "suggested_url": "https://ceur-ws.org/Vol-3303/paper8.pdf",
+    "suggested_note": "Workshop paper in CEUR (not main RecSys proceedings; no ACM DOI). Prefer: booktitle ORSUM@RecSys 2022 + CEUR URL (keep arXiv as alternate). Mark: replace with workshop version."
+  },
+  {
+    "id": "lu2016partially",
+    "kind": "arxiv",
+    "year": "2016",
+    "title": "Partially observable Markov decision process for recommender systems",
+    "authors": "Lu, Zhongqi; Yang, Qiang",
+    "journal": "arXiv preprint arXiv:1608.07793",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1608.07793",
+    "suggested_venue": "",
+    "suggested_doi": "",
+    "suggested_url": "https://arxiv.org/abs/1608.07793",
+    "suggested_note": "No published venue found beyond arXiv. Mark: keep as-is."
+  },
+  {
+    "id": "mazoure2021improving",
+    "kind": "arxiv",
+    "year": "2021",
+    "title": "Improving long-term metrics in recommendation systems using short-horizon reinforcement learning",
+    "authors": "Mazoure, Bogdan et al.",
+    "journal": "arXiv preprint arXiv:2106.00589",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/2106.00589",
+    "suggested_venue": "ECML-PKDD 2022",
+    "suggested_doi": "",
+    "suggested_url": "https://www.microsoft.com/en-us/research/publication/improving-long-term-metrics-in-recommendation-systems-using-short-horizon-reinforcement-learning/",
+    "suggested_note": "Published ECML-PKDD 2022 (MSR confirms). Chapter DOI not located in Crossref yet — use venue + MSR URL. Mark: replace."
+  },
+  {
+    "id": "naumov2019deep",
+    "kind": "arxiv",
+    "year": "2019",
+    "title": "Deep learning recommendation model for personalization and recommendation systems",
+    "authors": "Naumov, Maxim et al.",
+    "journal": "arXiv preprint arXiv:1906.00091",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1906.00091",
+    "suggested_venue": "",
+    "suggested_doi": "",
+    "suggested_url": "https://arxiv.org/abs/1906.00091",
+    "suggested_note": "DLRM remains Meta/Facebook tech report on arXiv; widely cited as such. Mark: keep as-is."
+  },
+  {
+    "id": "schulman2017proximal",
+    "kind": "arxiv",
+    "year": "2017",
+    "title": "Proximal policy optimization algorithms",
+    "authors": "Schulman, John et al.",
+    "journal": "arXiv preprint arXiv:1707.06347",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1707.06347",
+    "suggested_venue": "",
+    "suggested_doi": "",
+    "suggested_url": "https://arxiv.org/abs/1707.06347",
+    "suggested_note": "PPO canonical cite is arXiv; no later archival rewrite. Mark: keep as-is."
+  },
+  {
+    "id": "zhao2024survey",
+    "kind": "arxiv",
+    "year": "2024",
+    "title": "A survey of retrieval algorithms in ad and content recommendation systems",
+    "authors": "Zhao, Yu; Liu, Fang",
+    "journal": "arXiv preprint arXiv:2407.01712",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/2407.01712",
+    "suggested_venue": "IJECE 16(3), June 2026, pp. 1518–1530",
+    "suggested_doi": "10.11591/ijece.v16i3.pp1518-1530",
+    "suggested_url": "https://ijece.iaescore.com/index.php/IJECE/article/view/42030",
+    "suggested_note": "Published IJECE (authors include Yuan Yuan & Yifan Dang in journal version). Update bib to journal + DOI; verify PDF matches our claims. Mark: replace."
+  },
+  {
+    "id": "zhou2016latent",
+    "kind": "arxiv",
+    "year": "2016",
+    "title": "Latent contextual bandits and their application to personalized recommendations for new users",
+    "authors": "Zhou, Li; Brunskill, Emma",
+    "journal": "arXiv preprint arXiv:1604.06743",
+    "url": "",
+    "doi": "",
+    "arxiv_abs": "https://arxiv.org/abs/1604.06743",
+    "suggested_venue": "IJCAI 2016, pp. 3646–3653",
+    "suggested_doi": "",
+    "suggested_url": "https://www.ijcai.org/Proceedings/16/Papers/513.pdf",
+    "suggested_note": "Published IJCAI-16 (official proceedings PDF). No Crossref DOI on DBLP. Mark: replace."
+  },
+  {
+    "id": "mcdonald2023spotify",
+    "kind": "industry-web",
+    "year": "2023",
+    "title": "Optimizing for the long-term without delay",
+    "authors": "McDonald, Thomas M. et al.",
+    "journal": "Spotify Research Blog",
+    "url": "https://research.atspotify.com/2023/07/optimizing-for-the-long-term-without-delay/",
+    "doi": "",
+    "arxiv_abs": "",
+    "suggested_venue": "KDD 2023 (Impatient Bandits) — prefer existing key mcdonald2023impatient",
+    "suggested_doi": "10.1145/3580305.3599410",
+    "suggested_url": "https://dl.acm.org/doi/10.1145/3580305.3599410",
+    "suggested_note": "Blog post has archival KDD version already in bib as mcdonald2023impatient. Retarget cites from blog → KDD key; drop blog if unused. Mark: replace / retarget."
+  },
+  {
+    "id": "nielsen2017advertising",
+    "kind": "industry-web",
+    "year": "2017",
+    "title": "When it comes to advertising effectiveness, what is key?",
+    "authors": "Nielsen",
+    "journal": "Nielsen Insights Online Article",
+    "url": "https://www.nielsen.com/insights/2017/when-it-comes-to-advertising-effectiveness-what-is-key/",
+    "doi": "",
+    "arxiv_abs": "",
+    "suggested_venue": "Nielsen Insights article (industry web)",
+    "suggested_doi": "",
+    "suggested_url": "https://www.nielsen.com/insights/2017/when-it-comes-to-advertising-effectiveness-what-is-key/",
+    "suggested_note": "Industry web source, not a preprint. Keep only if needed for CPM/effectiveness claim, or replace under R2-REF5 hygiene. Mark: keep as-is unless swapping CPM sources."
+  },
+  {
+    "id": "wikipedia-cpm",
+    "kind": "wikipedia",
+    "year": "2025",
+    "title": "Cost per mille — Wikipedia",
+    "authors": "Wikipedia contributors",
+    "journal": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Cost_per_mille",
+    "doi": "",
+    "arxiv_abs": "",
+    "suggested_venue": "Prefer Fain & Pedersen / Hu et al. / similar",
+    "suggested_doi": "",
+    "suggested_url": "",
+    "suggested_note": "AE R2-REF5: replace Wikipedia CPM cite"
+  }
+];
+
+    const STORAGE_KEY = "tors-preprint-checklist-v3";
+
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let state = loadState();
+
+    function decisionOf(id) {
+      return (state[id] && state[id].decision) || "pending";
+    }
+
+    function hasSuggestion(item) {
+      return !!(item.suggested_venue || item.suggested_doi || item.suggested_url || item.suggested_note);
+    }
+
+    function applySuggestion(s, item) {
+      // Always overwrite from the embedded suggestion (even if empty).
+      s.venue = item.suggested_venue || "";
+      s.doi = item.suggested_doi || "";
+      s.url = item.suggested_url || "";
+      s.note = item.suggested_note || "";
+    }
+
+    function ensure(id) {
+      if (!state[id]) {
+        // Leave fields empty until "Load suggestion" so that button visibly does something.
+        state[id] = {
+          decision: "pending",
+          venue: "",
+          doi: "",
+          url: "",
+          note: "",
+          checked: false,
+          flash: ""
+        };
+      }
+      return state[id];
+    }
+
+    function render() {
+      const kind = document.getElementById("filterKind").value;
+      const dec = document.getElementById("filterDecision").value;
+      const q = document.getElementById("search").value.trim().toLowerCase();
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+
+      let nPending = 0, nReplace = 0, nKeep = 0;
+      ITEMS.forEach(item => {
+        const s = ensure(item.id);
+        if (s.decision === "pending") nPending++;
+        if (s.decision === "replace") nReplace++;
+        if (s.decision === "keep") nKeep++;
+      });
+      document.getElementById("stats").textContent =
+        `${nReplace} replace · ${nKeep} keep · ${nPending} pending · ${ITEMS.length} total`;
+
+      ITEMS.forEach((item, idx) => {
+        const s = ensure(item.id);
+        if (kind !== "all" && item.kind !== kind) return;
+        if (dec !== "all" && s.decision !== dec) return;
+        if (q && !(item.id + " " + item.title).toLowerCase().includes(q)) return;
+
+        const card = document.createElement("article");
+        card.className = "card" + (s.decision === "replace" || s.checked ? " done" : "") + (s.decision === "keep" ? " keep" : "");
+        card.dataset.id = item.id;
+
+        const sugBadge = item.suggested_venue ? "suggested" : (item.kind === "already-published" ? "already-published" : "needs-research");
+        const links = [];
+        if (item.arxiv_abs) links.push(`<a href="${item.arxiv_abs}" target="_blank" rel="noopener">arXiv</a>`);
+        if (item.url) links.push(`<a href="${item.url}" target="_blank" rel="noopener">current URL</a>`);
+        if (item.doi) links.push(`<a href="https://doi.org/${item.doi}" target="_blank" rel="noopener">current DOI</a>`);
+        if (s.url) links.push(`<a href="${s.url}" target="_blank" rel="noopener">replacement URL</a>`);
+        else if (item.suggested_url) links.push(`<a href="${item.suggested_url}" target="_blank" rel="noopener">suggested URL</a>`);
+
+        card.innerHTML = `
+          <div class="toprow">
+            <input type="checkbox" ${s.checked || s.decision !== "pending" ? "checked" : ""} data-act="check" title="Tick when reviewed" />
+            <div>
+              <div>
+                <span class="badge ${item.kind}">${item.kind}</span>
+                <span class="badge ${sugBadge}">${sugBadge}</span>
+                <span class="decision ${s.decision}">${s.decision}</span>
+                <span class="key">#${idx + 1} ${item.id}</span>
+              </div>
+              <div class="title">${item.title}</div>
+              <div class="meta">${item.authors} · ${item.year} · ${item.journal || "(no journal)"}</div>
+              <div class="links">${links.join("")}</div>
+              ${(() => {
+                if (!hasSuggestion(item)) {
+                  return `<div class="suggest-box empty">No published DOI/venue suggestion on file — likely keep as arXiv / research further.</div>`;
+                }
+                const bits = [];
+                if (item.suggested_venue) bits.push(`<div><strong>Suggested venue:</strong> ${escapeHtml(item.suggested_venue)}</div>`);
+                if (item.suggested_doi) bits.push(`<div><strong>Suggested DOI:</strong> <code>${escapeHtml(item.suggested_doi)}</code> · <a href="https://doi.org/${escapeAttr(item.suggested_doi)}" target="_blank" rel="noopener">open</a></div>`);
+                else bits.push(`<div><strong>Suggested DOI:</strong> <em>none found</em> (venue/URL is enough)</div>`);
+                if (item.suggested_url) bits.push(`<div><strong>Suggested URL:</strong> <a href="${escapeAttr(item.suggested_url)}" target="_blank" rel="noopener">${escapeHtml(item.suggested_url)}</a></div>`);
+                if (item.suggested_note) bits.push(`<div><strong>Note:</strong> ${escapeHtml(item.suggested_note)}</div>`);
+                return `<div class="suggest-box">${bits.join("")}</div>`;
+              })()}
+            </div>
+            <div></div>
+          </div>
+          <div class="grid">
+            <label class="field"><span>Replacement venue</span>
+              <input data-field="venue" class="${s.flash ? "just-loaded" : ""}" value="${escapeAttr(s.venue)}" placeholder="e.g. AAAI 2023 / ICML 2011" />
+            </label>
+            <label class="field"><span>Replacement DOI</span>
+              <input data-field="doi" class="${s.flash ? "just-loaded" : ""}" value="${escapeAttr(s.doi)}" placeholder="10.xxxx/..." />
+            </label>
+            <label class="field"><span>Replacement URL</span>
+              <input data-field="url" class="${s.flash ? "just-loaded" : ""}" value="${escapeAttr(s.url)}" placeholder="https://..." />
+            </label>
+            <label class="field"><span>Notes / BibTeX instructions</span>
+              <textarea data-field="note" class="${s.flash ? "just-loaded" : ""}" placeholder="What should the agent change?">${escapeHtml(s.note)}</textarea>
+            </label>
+          </div>
+          <div class="actions">
+            <button type="button" data-act="suggest">${hasSuggestion(item) ? "Load suggestion" : "No suggestion on file"}</button>
+            <button type="button" data-act="replace">Mark: replace with published</button>
+            <button type="button" class="keep" data-act="keep">Mark: keep as-is</button>
+            <button type="button" class="reset" data-act="reset">Reset</button>
+            ${s.flash ? `<span class="flash ${s.flash.startsWith("No ") ? "muted" : ""}">${escapeHtml(s.flash)}</span>` : ""}
+          </div>
+        `;
+        list.appendChild(card);
+        // Clear one-shot flash after paint so it does not stick forever in state.
+        if (s.flash) {
+          const msg = s.flash;
+          setTimeout(() => {
+            if (state[item.id] && state[item.id].flash === msg) {
+              state[item.id].flash = "";
+              saveState(state);
+              card.querySelectorAll(".just-loaded").forEach(el => el.classList.remove("just-loaded"));
+              const flashEl = card.querySelector(".flash");
+              if (flashEl) flashEl.remove();
+            }
+          }, 1800);
+        }
+      });
+    }
+
+    function escapeAttr(s) {
+      return String(s || "").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+    }
+    function escapeHtml(s) {
+      return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    }
+
+    function exportObj() {
+      return ITEMS.map(item => {
+        const s = ensure(item.id);
+        return {
+          id: item.id,
+          kind: item.kind,
+          title: item.title,
+          decision: s.decision,
+          replacement: {
+            venue: s.venue,
+            doi: s.doi,
+            url: s.url,
+            note: s.note
+          }
+        };
+      });
+    }
+
+    document.getElementById("list").addEventListener("input", (e) => {
+      const card = e.target.closest(".card");
+      if (!card) return;
+      const id = card.dataset.id;
+      const s = ensure(id);
+      if (e.target.dataset.field) {
+        s[e.target.dataset.field] = e.target.value;
+        saveState(state);
+      }
+    });
+
+    document.getElementById("list").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-act]");
+      if (!btn) return;
+      e.preventDefault();
+      const card = btn.closest(".card");
+      if (!card) return;
+      const id = card.dataset.id;
+      const s = ensure(id);
+      const item = ITEMS.find(x => x.id === id);
+      const act = btn.dataset.act;
+      if (act === "check") {
+        s.checked = btn.checked;
+        s.flash = "";
+      } else if (act === "suggest") {
+        applySuggestion(s, item);
+        s.flash = hasSuggestion(item)
+          ? "Suggestion loaded into the fields below."
+          : "No published replacement on file — keep as arXiv / research further.";
+      } else if (act === "replace") {
+        // If fields are still empty, pull the suggestion first so Mark:replace is useful.
+        if (!s.venue && !s.doi && !s.url && hasSuggestion(item)) applySuggestion(s, item);
+        s.decision = "replace";
+        s.checked = true;
+        s.flash = "Marked replace.";
+      } else if (act === "keep") {
+        s.decision = "keep";
+        s.checked = true;
+        s.flash = "Marked keep as-is.";
+      } else if (act === "reset") {
+        state[id] = {
+          decision: "pending",
+          venue: "",
+          doi: "",
+          url: "",
+          note: "",
+          checked: false,
+          flash: "Reset."
+        };
+      }
+      saveState(state);
+      render();
+    });
+
+    ["filterKind","filterDecision","search"].forEach(id => {
+      document.getElementById(id).addEventListener("input", render);
+      document.getElementById(id).addEventListener("change", render);
+    });
+
+    document.getElementById("btnExport").addEventListener("click", () => {
+      const box = document.getElementById("exportBox");
+      box.style.display = "block";
+      box.textContent = JSON.stringify(exportObj(), null, 2);
+    });
+    document.getElementById("btnCopy").addEventListener("click", async () => {
+      const payload = JSON.stringify(exportObj(), null, 2);
+      await navigator.clipboard.writeText(payload);
+      const box = document.getElementById("exportBox");
+      box.style.display = "block";
+      box.textContent = payload + "\n\n# Copied to clipboard. Paste into chat.";
+    });
+    document.getElementById("btnBackup").addEventListener("click", () => {
+      // Full localStorage state (decisions + form fields), not just export summary.
+      const payload = {
+        saved_at: new Date().toISOString(),
+        storage_key: STORAGE_KEY,
+        state: state
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "preprint_checklist_progress.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      const box = document.getElementById("exportBox");
+      box.style.display = "block";
+      box.textContent = "Backup downloaded as preprint_checklist_progress.json\n(keeps all ticks + field text).";
+    });
+    document.getElementById("btnImport").addEventListener("click", () => {
+      document.getElementById("importFile").click();
+    });
+    document.getElementById("importFile").addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = "";
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        const incoming = data.state || data; // allow raw state or wrapped backup
+        if (!incoming || typeof incoming !== "object" || Array.isArray(incoming)) {
+          throw new Error("Expected an object map of item ids → decisions");
+        }
+        if (!confirm("Import backup and merge into current progress? Existing ticks for the same keys will be overwritten by the file.")) return;
+        state = { ...state, ...incoming };
+        saveState(state);
+        render();
+        const box = document.getElementById("exportBox");
+        box.style.display = "block";
+        box.textContent = "Backup imported. Your decisions are restored.";
+      } catch (err) {
+        alert("Could not import backup: " + (err && err.message ? err.message : err));
+      }
+    });
+    document.getElementById("btnFillEmpty").addEventListener("click", () => {
+      let n = 0;
+      ITEMS.forEach(item => {
+        const s = ensure(item.id);
+        const before = JSON.stringify([s.venue, s.doi, s.url, s.note]);
+        if (!s.venue && item.suggested_venue) s.venue = item.suggested_venue;
+        if (!s.doi && item.suggested_doi) s.doi = item.suggested_doi;
+        if (!s.url && item.suggested_url) s.url = item.suggested_url;
+        if (!s.note && item.suggested_note) s.note = item.suggested_note;
+        const after = JSON.stringify([s.venue, s.doi, s.url, s.note]);
+        if (before !== after) n++;
+      });
+      saveState(state);
+      render();
+      const box = document.getElementById("exportBox");
+      box.style.display = "block";
+      box.textContent = `Filled empty fields from suggestions on ${n} card(s). Decisions (replace/keep) were not changed.`;
+    });
+    document.getElementById("btnClear").addEventListener("click", () => {
+      if (confirm("Clear all saved checklist progress in this browser?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        state = {};
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

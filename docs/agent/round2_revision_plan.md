@@ -7,7 +7,7 @@
 **Prior round (for context only):** `docs/agent/reviewers.txt` responds to `original_submission_paper.pdf`  
 **Working rule:** One-by-one approval. Propose each change, wait for explicit go-ahead, then edit. Do not change `paper.tex` / `bibliography.bib` until approved.
 
-Latest refresh: 12-Sep-2026 (plan created from AE + Reviewer 1 letter; investigation started; no manuscript edits applied yet).
+Latest refresh: 12-Sep-2026 — R2-REF1/2/3/5 applied (title casing + preprint/weak-source polish + Kang dedupe + Wikipedia CPM); reviewer-response draft updated accordingly. Remaining: DOIs/AI disclosure, claim softens, tables, Section 3, R1 taxonomy, numbered cites.
 
 ---
 
@@ -46,11 +46,11 @@ Work AE not-so-minor and R1 Accept-blocker first, then AE minor reference polish
 | 9 | R2-STATE1 | Reviewer 1 | Section 4.4 / state space | PENDING | Rewrite Markovianity vs Expressiveness cells + SlateQ/PinnerFormer contrast |
 | 10 | R2-ABBR1 | Minor / AE | Introduction | LOCATED | Expand SL at first use |
 | 11 | R2-REF1 | Minor / AE | Bibliography | DONE | Title case → sentence case for cited entries |
-| 12 | R2-REF2 | Minor / AE | Bibliography | PENDING | Preprint → published venue where available |
-| 13 | R2-REF3 | Minor / AE | Bibliography + tex | LOCATED | Deduplicate Kang & McAuley 2018 |
+| 12 | R2-REF2 | Minor / AE | Bibliography | DONE (checklist applied) | Preprint → published where available; keeps documented |
+| 13 | R2-REF3 | Minor / AE | Bibliography + tex | DONE | Deduplicated Kang & McAuley 2018 |
 | 14 | R2-REF4 | Minor / AE | Global style | PENDING APPROVAL | Switch author-year → numbered citations |
-| 15 | R2-REF5 | Minor / AE | History / CPM | LOCATED | Replace Wikipedia CPM citation |
-| 16 | R2-COVER | Submission | Cover letter | PENDING | Draft response-to-reviewers letter |
+| 15 | R2-REF5 | Minor / AE | History / CPM | DONE | Wikipedia CPM → hu2004performance |
+| 16 | R2-COVER | Submission | Cover letter | DRAFTED | Draft response letter in plan (incl. Horizon keep-as-arXiv explanation) |
 
 ---
 
@@ -283,25 +283,42 @@ ACM Reference Format conventionally uses **sentence case** for paper/article tit
 
 ### R2-REF2 — Preprints → published versions (AE)
 
-**Plan:**
-1. List `@misc` / arXiv-only entries that are actually cited in `paper.tex`.
-2. For each, check whether a published version exists; if yes, replace bib metadata (venue, year, DOI, pages).
-3. Leave true preprints only when no published version exists.
+**AE quote:** *"Replace references to preprints with references to published papers"*
 
-**Status:** not started.
+**Status:** DONE (12-Sep-2026) — checklist decisions applied to `bibliography.bib` /
+`paper.tex`. Progress log: `docs/agent/preprint_checklist_progress.json`.
+
+#### Applied replacements
+
+| Bib key | Action taken |
+|---|---|
+| `carrion2021blending` | arXiv → AAAI 2023 (`@inproceedings`, DOI `10.1609/aaai.v37i13.26835`, pp. 15476–15484; title “…via virtual bids”) |
+| `dudik2011doubly` | arXiv → ICML 2011 Omnipress (`@inproceedings`, pp. 1097–1104, ICML PDF URL) |
+| `dulac2019challenges` | Retargeted all cites → `dulac2021challenges`; added Springer DOI; removed 2019 arXiv entry |
+| `ie2019reinforcement` | Retargeted cites → `ie2019slateq`; polished IJCAI entry + DOI; removed arXiv entry |
+| `kang2018sasrec` | IEEE Xplore URL; consolidated duplicate `Kang2018` (also R2-REF3) |
+| `mazoure2021improving` | arXiv → ECML PKDD 2022 (`@inproceedings`, MSR publication URL) |
+| `zhao2024survey` | arXiv → IJECE 16(3) 2026 (DOI `10.11591/ijece.v16i3.pp1518-1530`; authors + Yuan/Dang) |
+| `zhou2016latent` | arXiv → IJCAI 2016 (pp. 3646–3653, official proceedings PDF) |
+| `mcdonald2023spotify` | Blog cites → existing KDD 2023 `mcdonald2023impatient` + DOI; removed blog entry |
+| `wikipedia-cpm` | Handled under R2-REF5 |
+
+#### Kept as arXiv / tech report (with optional institutional URLs)
+
+| Bib key | Why kept | URL polish |
+|---|---|---|
+| `gauci2018horizon` | No archival proceedings (ICML 2019 RL4RealLife workshop only) | Meta Research landing page |
+| `ie2019recsim` | Google Research tech report; RecSim NG is a different paper | Google Research pubs page; `{RecSim}` casing |
+| `lambert2023entangled` | Still arXiv | Title corrected to current arXiv title (dropped “Entangled preferences:”) |
+| `kuleshov2014algorithms`, `levine2020offline`, `liu2022monolith`, `lu2016partially`, `naumov2019deep`, `schulman2017proximal` | No better archival venue found / canonical arXiv | unchanged |
+| `nielsen2017advertising` | Industry web (not a preprint); already had correct URL | left as-is |
 
 ---
 
 ### R2-REF3 — Duplicate Kang & McAuley 2018 (AE)
 
-**Located:**
-- `kang2018sasrec` (used ~line 735)
-- `Kang2018` (used ~line 253)
-- Same paper: Self-Attentive Sequential Recommendation (ICDM 2018), same DOI.
-
-**Plan:** Keep one key (prefer `kang2018sasrec`), retarget all cites, remove the other bib entry.
-
-**Approval needed before edit.**
+**Status:** DONE (12-Sep-2026). Kept `kang2018sasrec`; retargeted `\cite{Kang2018}`;
+removed duplicate bib entry; IEEE Xplore URL.
 
 ---
 
@@ -319,23 +336,133 @@ ACM Reference Format conventionally uses **sentence case** for paper/article tit
 
 ### R2-REF5 — Replace Wikipedia CPM (AE)
 
-**Location:** History ~line 232, cite `wikipedia-cpm`.
-
-**Plan:** Replace with a scholarly / industry source that defines CPM (e.g., Fain & Pedersen sponsored-search survey already nearby, or another ad-pricing reference already in the bib such as `hu2004performance` / `fain2006sponsored`). Remove or stop citing `wikipedia-cpm`.
-
-**Approval needed before edit.**
+**Status:** DONE (12-Sep-2026). History paragraph cite `\cite{wikipedia-cpm}` →
+`\cite{hu2004performance}` (performance-based pricing / CPM→CPC→CPA literature
+already used in the same paragraph). Removed `wikipedia-cpm` bib entry.
 
 ---
 
 ### R2-COVER — Cover letter / response to reviewers
 
-**Plan:** After substantive edits, draft a point-by-point response letter that:
-1. Thanks AE and R1; notes Accept recommendation and addresses the Section 4.4 ask.
-2. Lists each AE minor / not-so-minor item with "Done" + brief description of the change.
-3. Explicitly states DOI audit results and AI disclosure addition.
-4. Does **not** overclaim; only list changes actually made.
+**Status:** DRAFT updated (12-Sep-2026) for completed reference-polish items
+(R2-REF1/2/3/5). Remaining not-so-minor and R1 items still Planned until edited.
 
-**Approval needed before treating as final submission text.**
+---
+
+## Draft response to reviewers (Round 2)
+
+Working draft for the resubmission cover letter / response document.
+Bracketed notes are reminders for us; strip them before sending.
+Update each bullet from *Planned* → *Done* only after the edit lands in
+`paper.tex` / `bibliography.bib`.
+
+```text
+Dear Associate Editor and Reviewer,
+
+Thank you for the minor-revision decision and for the careful reference
+and accuracy checks. We address each point below. Section references
+refer to the revised manuscript.
+
+----------------------------------------------------------------
+Associate Editor — minor points
+----------------------------------------------------------------
+
+1. Reference title casing
+   Done. We audited cited bibliography titles and converted them to
+   consistent sentence case (preserving proper nouns and acronyms),
+   matching the majority style already present in the bibliography.
+
+2. Preprints replaced with published versions where available
+   Done. We systematically checked arXiv / preprint / weak-source
+   citations against published venues (publisher pages, Crossref,
+   IEEE Xplore, ACM DL, IJCAI proceedings, and institutional pages).
+   Where a peer-reviewed archival version exists, we updated the
+   bibliography entry and retargeted in-text citations when a better
+   key already existed. Applied updates include:
+   - Carrion et al. → AAAI 2023 (DOI 10.1609/aaai.v37i13.26835)
+   - Dudík et al. → ICML 2011 proceedings (Omnipress; official PDF URL)
+   - Mazoure et al. → ECML-PKDD 2022 (Microsoft Research publication URL)
+   - Dulac-Arnold et al. challenges paper → Machine Learning 2021
+     (consolidated on the published key; Springer DOI added)
+   - Ie et al. SlateQ-related cites → IJCAI 2019 SlateQ paper
+     (DOI 10.24963/ijcai.2019/360); removed the parallel arXiv key
+   - Zhou & Brunskill latent contextual bandits → IJCAI 2016
+   - Zhao & Liu retrieval survey → IJECE 16(3), 2026
+     (DOI 10.11591/ijece.v16i3.pp1518-1530)
+   - Spotify blog “Optimizing for the long-term…” → KDD 2023
+     Impatient Bandits paper (DOI 10.1145/3580305.3599410)
+   - Kang & McAuley SASRec → ICDM 2018 IEEE record
+     (DOI 10.1109/ICDM.2018.00035; IEEE Xplore URL)
+
+   A small number of citations remain as arXiv / technical reports
+   because no archival journal or conference proceedings version
+   exists. In particular:
+   - Gauci et al., Horizon (arXiv:1811.00260): appeared only at the
+     ICML 2019 RL4RealLife workshop, which had no formal proceedings.
+     We retain the arXiv record and point the bibliography URL to
+     Meta Research’s publication page for the same work.
+   - Ie et al., RecSim (arXiv:1909.04847): remains a Google Research /
+     arXiv tech report; the later RecSys 2020 RecSim NG demo is a
+     different follow-on system, so we do not substitute it. We point
+     the bibliography URL to the Google Research publication page.
+   - Other retained arXiv citations are canonical industrial tech
+     reports or widely cited algorithmic preprints without a later
+     archival rewrite (e.g., PPO, Levine et al. offline RL survey,
+     DLRM, Monolith). We also corrected the Lambert et al. title to
+     match the current arXiv listing. We are happy to adjust any
+     specific remaining entry if the Editorial Office prefers an
+     alternate citation format.
+
+3. Duplicate Kang & McAuley (2018)
+   Done. Consolidated to a single ICDM 2018 bibliography entry
+   (`kang2018sasrec`) and retargeted the duplicate in-text cite.
+
+4. Numbered references
+   [Planned:] Not yet applied; awaiting confirmation whether to switch
+   from author–year to numbered citation style for this revision.
+
+5. Wikipedia CPM citation
+   Done. Replaced the Wikipedia “Cost per mille” citation with Hu
+   (2004) on performance-based pricing models in online advertising,
+   which discusses CPM alongside the shift to CPC/CPA and was already
+   used in the same historical paragraph.
+
+----------------------------------------------------------------
+Associate Editor — not-so-minor points
+----------------------------------------------------------------
+
+6. Incorrect DOIs and AI disclosure
+   [Planned:] DOI audit fixes and Methods-section AI disclosure are
+   next; not yet applied in this reference-polish pass.
+
+7–11. Claim–citation alignment, off-policy / SL wording, Section 3
+   historical framing, and Table utility (Zhao 2020; LinkedIn / Yan 2020)
+   [Planned:] …
+
+----------------------------------------------------------------
+Reviewer 1
+----------------------------------------------------------------
+
+12. Section 4.4 state-space taxonomy (Markovianity vs Expressiveness;
+    SlateQ vs PinnerFormer)
+    [Planned:] …
+
+We hope these revisions fully address the remaining concerns.
+
+Sincerely,
+The authors
+```
+
+**Horizon paragraph (standalone):**
+
+```text
+Regarding Gauci et al. (Horizon): after checking Google Scholar and venue
+records, we found no archival journal or conference proceedings version of
+this paper. It was presented at the ICML 2019 RL4RealLife workshop, which
+did not publish formal proceedings. We therefore retain the arXiv preprint
+(arXiv:1811.00260) as the canonical citable version and point readers to
+Meta Research’s publication page for the same work.
+```
 
 ---
 

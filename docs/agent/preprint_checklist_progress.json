@@ -1,0 +1,282 @@
+[
+  {
+    "id": "carrion2021blending",
+    "kind": "arxiv",
+    "title": "Blending advertising with organic content in e-commerce: A virtual bids optimization approach",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "AAAI 2023",
+      "doi": "10.1609/aaai.v37i13.26835",
+      "url": "https://doi.org/10.1609/aaai.v37i13.26835",
+      "note": "Published AAAI-23; update title to …via Virtual Bids; pages 15476–15484"
+    }
+  },
+  {
+    "id": "dudik2011doubly",
+    "kind": "arxiv",
+    "title": "Doubly robust policy evaluation and learning",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "ICML 2011 (Omnipress proceedings)",
+      "doi": "",
+      "url": "https://icml.cc/Conferences/2011/papers/554_icmlpaper.pdf",
+      "note": "Published ICML 2011, pp. 1097–1104. No Crossref DOI for this Omnipress era paper — use proceedings URL + pages."
+    }
+  },
+  {
+    "id": "dulac2019challenges",
+    "kind": "arxiv",
+    "title": "Challenges of real-world reinforcement learning",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "Machine Learning (Springer) 2021",
+      "doi": "10.1007/s10994-021-05961-4",
+      "url": "https://doi.org/10.1007/s10994-021-05961-4",
+      "note": "Retarget paper.tex cites to existing key dulac2021challenges (already published; add this DOI to that bib entry)."
+    }
+  },
+  {
+    "id": "gauci2018horizon",
+    "kind": "arxiv",
+    "title": "Horizon: Facebook's open source applied reinforcement learning platform",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "arXiv (Meta Research landing page URL)",
+      "doi": "",
+      "url": "https://research.facebook.com/publications/horizon-facebooks-open-source-applied-reinforcement-learning-platform/",
+      "note": "Still arXiv/tech report; added Meta Research publication URL"
+    }
+  },
+  {
+    "id": "ie2019recsim",
+    "kind": "arxiv",
+    "title": "RecSim: A configurable simulation platform for recommender systems",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "arXiv (Google Research landing page URL)",
+      "doi": "",
+      "url": "https://research.google/pubs/recsim-a-configurable-simulation-platform-for-recommender-systems/",
+      "note": "Still arXiv/tech report; added Google Research publication URL; fixed RecSim casing"
+    }
+  },
+  {
+    "id": "ie2019reinforcement",
+    "kind": "arxiv",
+    "title": "Reinforcement learning for slate-based recommender systems: A tractable decomposition and practical methodology",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "IJCAI 2019 (SlateQ)",
+      "doi": "10.24963/ijcai.2019/360",
+      "url": "https://doi.org/10.24963/ijcai.2019/360",
+      "note": "Prefer existing key ie2019slateq for SlateQ claims"
+    }
+  },
+  {
+    "id": "kang2018sasrec",
+    "kind": "already-published",
+    "title": "Self-attentive sequential recommendation",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "ICDM 2018 (already set)",
+      "doi": "10.1109/ICDM.2018.00035",
+      "url": "https://ieeexplore.ieee.org/abstract/document/8594844",
+      "note": "Already published; optionally remove arXiv URL. Also duplicate key Kang2018 (R2-REF3)."
+    }
+  },
+  {
+    "id": "kuleshov2014algorithms",
+    "kind": "arxiv",
+    "title": "Algorithms for multi-armed bandit problems",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "",
+      "doi": "",
+      "url": "",
+      "note": ""
+    }
+  },
+  {
+    "id": "lambert2023entangled",
+    "kind": "arxiv",
+    "title": "Entangled preferences: The history and risks of reinforcement learning and human feedback",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "",
+      "doi": "",
+      "url": "",
+      "note": "Keep as arXiv. Fix bib title to match current arXiv: The history and risks of reinforcement learning and human feedback"
+    }
+  },
+  {
+    "id": "levine2020offline",
+    "kind": "arxiv",
+    "title": "Offline reinforcement learning: Tutorial, review, and perspectives on open problems",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "",
+      "doi": "",
+      "url": "",
+      "note": ""
+    }
+  },
+  {
+    "id": "liu2022monolith",
+    "kind": "arxiv",
+    "title": "Monolith: real time recommendation system with collisionless embedding table",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "",
+      "doi": "",
+      "url": "",
+      "note": ""
+    }
+  },
+  {
+    "id": "lu2016partially",
+    "kind": "arxiv",
+    "title": "Partially observable Markov decision process for recommender systems",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "",
+      "doi": "",
+      "url": "",
+      "note": ""
+    }
+  },
+  {
+    "id": "mazoure2021improving",
+    "kind": "arxiv",
+    "title": "Improving long-term metrics in recommendation systems using short-horizon reinforcement learning",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "ECML-PKDD 2022",
+      "doi": "",
+      "url": "https://www.microsoft.com/en-us/research/publication/improving-long-term-metrics-in-recommendation-systems-using-short-horizon-reinforcement-learning/",
+      "note": "Published ECML-PKDD 2022; use venue + MSR URL"
+    }
+  },
+  {
+    "id": "naumov2019deep",
+    "kind": "arxiv",
+    "title": "Deep learning recommendation model for personalization and recommendation systems",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "",
+      "doi": "",
+      "url": "",
+      "note": "DLRM; typically remains arXiv"
+    }
+  },
+  {
+    "id": "schulman2017proximal",
+    "kind": "arxiv",
+    "title": "Proximal policy optimization algorithms",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "",
+      "doi": "",
+      "url": "https://arxiv.org/abs/1707.06347",
+      "note": "PPO canonical cite is arXiv"
+    }
+  },
+  {
+    "id": "zhao2024survey",
+    "kind": "arxiv",
+    "title": "A survey of retrieval algorithms in ad and content recommendation systems",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "IJECE 16(3), June 2026, pp. 1518–1530",
+      "doi": "10.11591/ijece.v16i3.pp1518-1530",
+      "url": "https://ijece.iaescore.com/index.php/IJECE/article/view/42030",
+      "note": "Published IJECE; update bib to journal + DOI"
+    }
+  },
+  {
+    "id": "zhou2016latent",
+    "kind": "arxiv",
+    "title": "Latent contextual bandits and their application to personalized recommendations for new users",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "IJCAI 2016, pp. 3646–3653",
+      "doi": "",
+      "url": "https://www.ijcai.org/Proceedings/16/Papers/513.pdf",
+      "note": "Published IJCAI-16"
+    }
+  },
+  {
+    "id": "mcdonald2023spotify",
+    "kind": "industry-web",
+    "title": "Optimizing for the long-term without delay",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "KDD 2023 (Impatient Bandits) — prefer existing key mcdonald2023impatient",
+      "doi": "10.1145/3580305.3599410",
+      "url": "https://dl.acm.org/doi/10.1145/3580305.3599410",
+      "note": "Retarget cites from blog → mcdonald2023impatient"
+    }
+  },
+  {
+    "id": "nielsen2017advertising",
+    "kind": "industry-web",
+    "title": "When it comes to advertising effectiveness, what is key?",
+    "decision": "keep",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "Nielsen Insights article (industry web)",
+      "doi": "",
+      "url": "https://www.nielsen.com/insights/2017/when-it-comes-to-advertising-effectiveness-what-is-key/",
+      "note": "Left as industry web source (already correct URL); no archival academic substitute applied"
+    }
+  },
+  {
+    "id": "wikipedia-cpm",
+    "kind": "wikipedia",
+    "title": "Cost per mille — Wikipedia",
+    "decision": "replace",
+    "applied": true,
+    "applied_at": "2026-09-12",
+    "replacement": {
+      "venue": "Hu 2004 performance-based pricing (hu2004performance)",
+      "doi": "",
+      "url": "",
+      "note": "AE R2-REF5: replace Wikipedia CPM cite with hu2004performance"
+    }
+  }
+]
