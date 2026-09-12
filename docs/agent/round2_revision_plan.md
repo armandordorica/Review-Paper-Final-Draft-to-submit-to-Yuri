@@ -419,10 +419,10 @@ Associate Editor — minor points
    (`kang2018sasrec`) and retargeted the duplicate in-text cite.
 
 4. Numbered references
-   Done. Switched the manuscript from ACM author–year to ACM
-   numbered citation style (`\citestyle{acmnumeric}`). In-text
-   citations now appear as numbers; the reference list remains in
-   ACM Reference Format.
+   Done. We changed the in-text citation style from author–year
+   (e.g., “[Kang and McAuley 2018]”) to numbered ACM citations
+   (e.g., “[44]”). The reference list remains in ACM Reference
+   Format and is now numbered accordingly.
 
 5. Wikipedia CPM citation
    Done. Replaced the Wikipedia “Cost per mille” citation with Hu
@@ -465,6 +465,16 @@ this paper. It was presented at the ICML 2019 RL4RealLife workshop, which
 did not publish formal proceedings. We therefore retain the arXiv preprint
 (arXiv:1811.00260) as the canonical citable version and point readers to
 Meta Research’s publication page for the same work.
+```
+
+**Numbered references paragraph (standalone):**
+
+```text
+Regarding numbered references: we have switched the manuscript from
+author–year in-text citations to ACM numbered citations. Citations in
+the text now appear as numbers (for example, [44] rather than
+[Kang and McAuley 2018]), and the reference list is numbered in ACM
+Reference Format.
 ```
 
 ---
