@@ -1,7 +1,7 @@
-\documentclass[acmsmall]{acmart}
+\documentclass[manuscript,review,screen]{acmart}
 
-% CSUR (journal) topmatter
-\acmJournal{CSUR}
+% TORS (journal) topmatter
+\acmJournal{TORS}
 \acmYear{2025}
 \setcopyright{none}
 \settopmatter{printacmref=false}
@@ -52,37 +52,14 @@
 
 \begin{document}
 \begin{abstract}
-Balancing advertisements with organic content in large-scale recommendation engines is a challenge in the industry. Ads are central to platform revenue, but jointly
-serving them with organic content creates trade-offs
-between monetization and user experience. The key challenges in achieving this balance include ad selection, ranking, and integration with organic content. These involve decisions about whether to insert an ad, which ad to select, and where to place it. 
+Balancing advertisements with organic content is a challenge for large-scale recommendation platforms. Ads are central to platform revenue, but jointly serving them with organic content creates trade-offs between monetization and user experience. Many production systems frame these decisions as supervised learning problems that optimize immediate ad clickthrough, estimating immediate outcomes under a historical logging policy while treating decisions as independent. Formulating joint ad and organic ranking as long-horizon optimization over action sequences, under policy-induced state evolution, remains an open research problem.
 
-Many production systems frame these decisions as
-supervised learning problems that optimize the
-probability of immediate ad clickthrough under
-fixed placements. However, these approaches estimate conditional expectations of immediate outcomes under a historical logging policy, treating decisions as independent and optimizing short-horizon objectives. A formulation that accounts for contextual information and policy-induced state evolution, and that optimizes long-horizon value over action sequences to jointly balance engagement and revenue, remains an active area of research.
-
-Reinforcement Learning (RL) provides a principled framework for modeling recommendation as a sequential decision process under uncertainty. However, implementing RL in large-scale recommendation systems faces challenges including high-dimensional state and action spaces, the risk of poorly chosen reward functions and unsafe exploration, high computational costs, and the difficulty of interpreting online policy learning. 
-
-This survey, aimed at industry practitioners,
-synthesizes prior RL work on the joint optimization
-of ads and organic content, distilling design choices,
-trade-offs, and evaluation practices through a
-unifying taxonomy that organizes each system by how
-it formulates the MDP (state, action, reward) and
-learns its policy. Our review indicates that while fully online RL is theoretically appealing, documented industrial systems more frequently adopt hybrid architectures that leverage supervised learning for short-term estimation while incorporating RL components for long-horizon value optimization.
-Furthermore, many large-scale deployments rely on
-offline and constrained RL formulations, such as
-contextual bandits and counterfactual policy
-evaluation, that enable policy learning from logged
-interaction data while balancing scalability,
-safety, and interpretability.
+Reinforcement Learning (RL) offers a principled framework for modeling recommendation as sequential decision-making under uncertainty, but at scale it must represent high-dimensional state and action spaces, specify robust reward functions, explore safely, and manage substantial computational cost. This practitioner-oriented survey synthesizes prior RL work on the joint optimization of ads and organic content, distilling design choices, trade-offs, and evaluation practices through a unifying taxonomy that organizes each system by how it formulates the MDP (state, action, reward) and learns its policy. We find that industrial systems favor hybrid architectures and offline or constrained RL, such as contextual bandits and counterfactual policy evaluation, that learn from logged data while balancing scalability, safety, and interpretability.
 \end{abstract}
 
 \keywords{Reinforcement Learning, Ad Policy Optimization, Contextual Bandits, Recommendation Systems, Off-Policy Learning, Online Advertising, Deep Reinforcement Learning, Multi-Objective Optimization}
 
 \maketitle
-{\small\noindent Compiled: \BuildTimestamp\par}
-\vspace{0.75em}
 
 % \tableofcontents
 

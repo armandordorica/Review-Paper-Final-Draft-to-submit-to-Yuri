@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Regenerate CITED_PAPERS_METRICS.md from paper.tex, bibliography, and audit data."""
 
+from __future__ import annotations
+
 import html
 import json
 import re
@@ -68,7 +70,7 @@ KEY_FAMILIES: dict[str, set[str]] = {
     "dulac2019challenges": {"rl"},
     "dulac2021challenges": {"rl"},
     "everitt2021reward": {"rl"},
-    "gauci2018horizon": {"rl", "ope"},
+    "gauci2018horizon": {"ctr", "rl", "ope"},
     "deffayet2022offline": {"rank", "ope", "rl"},
     "li2010contextual": {"ctr", "regret"},
     "chapelle2011empirical": {"regret", "ctr"},
@@ -235,7 +237,7 @@ PDF_URL_OVERRIDES: dict[str, str] = {
     "burtini2015improving": "https://www.scitepress.org/PublishedPapers/2015/54587/54587.pdf",
     "ccelik2023ad": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/ijcs.12882",
     "chakrabarti2008contextual": "https://dl.acm.org/doi/pdf/10.1145/1367497.1367554",
-    "chapelle2011empirical": "https://papers.nips.cc/paper/4317-an-empirical-evaluation-of-thompson-sampling.pdf",
+    "chapelle2011empirical": "https://proceedings.neurips.cc/paper/2011/file/e53a0a2978c28872a4505bdb51db06dc-Paper.pdf",
     "chen2009large": "https://people.eecs.berkeley.edu/~jfc/papers/09/KDD09.pdf",
     "cui2015global": "https://link.springer.com/content/pdf/10.1007/s11390-015-1523-4.pdf",
     "dimitrakakis2018decision": "https://www.cse.chalmers.se/~chrdimi/downloads/book.pdf",
@@ -610,7 +612,7 @@ AFFILIATION_OVERRIDES: dict[str, str] = {
     "li2010contextual": "Yahoo!",
     "chapelle2011empirical": "Yahoo! / Criteo",
     "yan2009much": "Yahoo!",
-    "engel2008incorporating": "Yahoo!",
+    "engel2008incorporating": "Microsoft (Live Labs) / U. Michigan",
     "chakrabarti2008contextual": "Yahoo!",
     "chen2009large": "Microsoft / Yahoo!",
     "hu2004performance": "Google",
@@ -1191,6 +1193,11 @@ CTR_CLICKS_DETAILS: dict[str, tuple[str, str, str]] = {
         "Table 2: session accumulated reward R = 10.96 vs. HDQN 10.27 (+6.7%, p=0.002); sensitivity analysis tracks Rad = Σ r^{ad} (ad revenue) and Rex = Σ r^{ex} separately vs. α.",
         "Simulated online environment on Douyin logs (Mar 2019); Table 2 reports session R on held-out sessions. No live A/B or deployment results in the AAAI paper.",
     ),
+    "gauci2018horizon": (
+        "CTR is reported as a task metric in Horizon's applied RL examples; policies are screened with counterfactual/off-policy estimators before controlled rollout.",
+        "Task-dependent CTR and reward/value outcomes; use as production RL workflow evidence, not as an ad-specific benchmark.",
+        "Offline DR / counterfactual evaluation plus gated online validation (Meta Horizon).",
+    ),
     "carrion2021blending": (
         "Virtual bids encode platform valuation of sponsored clicks in blended sponsored/organic auctions on JD.COM.",
         "Full mobile deployment; tens of millions of auctions/day (exact click-valuation lifts not disclosed in audit).",
@@ -1301,18 +1308,18 @@ EVAL_MODALITY_IDS = [c[0] for c in EVAL_MODALITY_COLS]
 EVAL_MODALITY_FLAGS: dict[str, tuple[bool, bool, bool]] = {
     "zhao2021dear": (True, True, False),  # offline logs + simulated online env; no live A/B in AAAI paper
     "zhao2020jointly": (True, True, False),  # same TikTok logs + simulated online env as DEAR; no live A/B in KDD paper
-    "zhang2018whole": (False, False, True),
-    "yan2020ads": (False, False, True),
+    "zhang2018whole": (True, False, True),  # VERIFIED: offline replay of logged request stream (Sec 5.1) + online A/B on live Alibaba traffic (Sec 5.2)
+    "yan2020ads": (True, True, True),  # offline replay (simulation-based) on logged feed sessions + online A/B + production
     "sagtani2024ad": (True, False, True),
     "chen2022off": (True, False, True),
-    "gauci2018horizon": (True, False, True),
+    "gauci2018horizon": (True, True, True),  # VERIFIED: offline CPE on logged data + Gym/Gridworld simulators + real A/B (push notifications)
     "ie2019slateq": (False, True, True),
     "ie2019recsim": (False, True, False),
     "swaminathan2015counterfactual": (True, False, False),
     "dudik2011doubly": (True, False, False),
     "levine2020offline": (False, False, False),
     "bietti2021contextual": (True, False, False),
-    "li2010contextual": (True, False, True),
+    "li2010contextual": (True, False, False),  # VERIFIED: offline replay via unbiased offline evaluator on logged random-bucket data; no live A/B of LinUCB
     "van2024practical": (False, False, False),  # industry perspective; no new empirical eval in 4-page WSDM paper
     "Mehrotra2020": (False, False, True),
     "xu2023optimizing": (False, False, True),
@@ -1334,24 +1341,24 @@ EVAL_MODALITY_FLAGS: dict[str, tuple[bool, bool, bool]] = {
     "agarwal2020optimistic": (True, False, False),
     "Kang2018": (True, False, False),
     "kang2018sasrec": (True, False, False),
-    "Zhou2018": (True, False, False),
-    "Zhou2019": (True, False, False),
+    "Zhou2018": (True, False, True),  # DIN: offline AUC + online A/B (CTR/RPM lift) at Alibaba display ads
+    "Zhou2019": (True, False, True),  # DIEN: offline AUC + online A/B (CTR lift) at Alibaba display ads
     "mcmahan2013ad": (True, False, True),
     "covington2016deep": (True, False, True),
     "cheng2016wide": (True, False, True),
-    "pancha2022pinnerformer": (False, False, True),
-    "xia2023transact": (False, False, True),
-    "zhang2024scaling": (False, False, True),
+    "pancha2022pinnerformer": (True, False, True),  # offline retrieval metrics + online A/B at Pinterest
+    "xia2023transact": (True, False, True),  # offline engagement-prediction experiments + online A/B at Pinterest
+    "zhang2024scaling": (True, False, True),  # VERIFIED: offline NE results (Sec 6.2) + online A/B (Sec 6.3, +2.67%) at Meta
     "gao2022bidding": (False, False, True),
-    "liu2022monolith": (False, False, True),
+    "liu2022monolith": (True, False, True),  # VERIFIED: offline AUC on MovieLens ml-25m + Criteo Display Ads + live A/B on production ads model
     "pan2023learning": (False, False, True),
-    "vorotilov2023scaling": (False, False, True),
+    "vorotilov2023scaling": (True, False, True),  # VERIFIED (eng blog): offline metrics / offline tuning + online engagement experiments
     "grbovic2018real": (True, False, True),
     "schwartz2017customer": (False, False, True),
     "tang2013ad": (False, False, True),
     "chen2009large": (False, False, True),
     "yan2009much": (False, False, True),
-    "chapelle2011empirical": (True, False, True),
+    "chapelle2011empirical": (True, True, False),  # VERIFIED: simulations (Bernoulli + simulated-click display ads) + offline replay (news rec); no live A/B
     "chakrabarti2008contextual": (True, False, False),
     "koutsopoulos2016native": (True, False, False),
     "lu2016partially": (False, True, False),
@@ -1370,7 +1377,7 @@ EVAL_MODALITY_FLAGS: dict[str, tuple[bool, bool, bool]] = {
     "agarwal2019online": (False, False, True),
     "agarwal2014budget": (False, False, True),
     "agarwal2014taming": (True, False, False),
-    "auer2002finite": (True, False, False),
+    "auer2002finite": (False, True, False),  # VERIFIED: Section 4 experiments on simulated Bernoulli bandit distributions; not logged-data replay
     "schulman2015trust": (False, True, False),
     "schulman2017proximal": (False, True, False),
     "mnih2016asynchronous": (False, True, False),
@@ -1393,7 +1400,7 @@ EVAL_MODALITY_FLAGS: dict[str, tuple[bool, bool, bool]] = {
     "cui2015global": (True, False, False),  # commercial search-engine logs; no live A/B reported
     "dimitrakakis2018decision": (False, False, False),
     "ellam2003overture": (False, False, False),
-    "engel2008incorporating": (False, False, False),
+    "engel2008incorporating": (False, True, False),  # VERIFIED: Sec 5 simulation experiments on real Microsoft Live Search bid data (470 queries, 2557 bids); no offline replay or live A/B
     "fain2006sponsored": (False, False, False),
     "gama2014survey": (False, False, False),
     "glanois2024survey": (False, False, False),
@@ -1505,7 +1512,7 @@ def eval_modality_cells_for_key(
 
     col_ids = ("eval-off", "eval-sim", "eval-on")
     flags = (off, sim, on)
-    return {cid: ("✓" if flag else "") for cid, flag in zip(col_ids, flags, strict=True)}
+    return {cid: ("✓" if flag else "") for cid, flag in zip(col_ids, flags)}
 
 
 def eval_modality_marker(cell: str) -> str:
@@ -1517,6 +1524,7 @@ def eval_modality_marker(cell: str) -> str:
 EVAL_MODALITY_BUCKET_META: list[tuple[str, str, str]] = [
     ("offline-only", "Offline only", "#2563eb"),
     ("online-only", "Online only", "#059669"),
+    ("offline-online", "Offline + online only", "#0891b2"),
     ("offline-sim", "Offline + simulation only", "#7c3aed"),
     ("offline-sim-online", "Offline + simulation + online", "#dc2626"),
     ("other-combo", "Other combination", "#f59e0b"),
@@ -1541,6 +1549,8 @@ def eval_modality_bucket_from_cells(cells: dict[str, str]) -> str:
         return "offline-only"
     if not off and not sim and on:
         return "online-only"
+    if off and not sim and on:
+        return "offline-online"
     if off and sim and not on:
         return "offline-sim"
     if off and sim and on:
@@ -1584,7 +1594,7 @@ MANUAL_METRICS: dict[str, str] = {
     "fain2006sponsored": "N/A (historical overview)",
     "gama2014survey": "N/A (concept-drift survey)",
     "gao2022bidding": "ROI, spend efficiency, click/conversion outcomes (LinkedIn bidding)",
-    "gauci2018horizon": "Task-specific reward, policy value (doubly robust offline evaluation)",
+    "gauci2018horizon": "CTR, task-specific reward, policy value (doubly robust offline evaluation)",
     "glanois2024survey": "N/A (interpretable RL survey)",
     "grbovic2018real": "Booking conversion, search ranking quality (Airbnb)",
     "hu2004performance": "Pricing-model performance (CPM/CPC/CPA analysis)",
@@ -1607,13 +1617,13 @@ MANUAL_METRICS: dict[str, str] = {
     "mcmahan2013ad": "Log loss, AUC, calibration (CTR prediction at scale)",
     "mnih2016asynchronous": "Average game score (Atari)",
     "naumov2019deep": "AUC, log loss (DLRM recommendation)",
-    "nielsen2017advertising": "Brand recall, advertising effectiveness (marketing research)",
+    "nielsen2017advertising": "N/A (brand recall / advertising effectiveness metrics outside configured ad-rec/RL metric families)",
     "pan2023learning": "Watch time, implicit negative-feedback engagement (short video)",
     "pancha2022pinnerformer": "HR@K, NDCG@K (Pinterest online)",
     "puterman2014markov": "N/A (MDP textbook)",
     "robbins1952sequential": "Regret / design-of-experiments (foundational theory)",
     "russell2016artificial": "N/A (AI textbook)",
-    "russo2018tutorial": "Regret (tutorial; conceptual, not industrial KPIs)",
+    "russo2018tutorial": "Catalogues cumulative regret for Thompson-sampling and bandit evaluation; tutorial, not original industrial KPIs",
     "saha2021advertiming": "Ad consumption timing, engagement, allocation outcomes",
     "schulman2015trust": "Average episodic return (MuJoCo / robotics benchmarks)",
     "schulman2017proximal": "Average episodic return (continuous-control benchmarks)",
@@ -1623,7 +1633,7 @@ MANUAL_METRICS: dict[str, str] = {
     "tang2013ad": "CTR, revenue (LinkedIn ad format selection)",
     "van2016deep": "Average game score (Atari)",
     "van2024practical": "Regret, production KPIs (industry bandit perspective)",
-    "vaswani2017attention": "BLEU, perplexity (machine translation; architecture paper)",
+    "vaswani2017attention": "N/A (BLEU / perplexity metrics outside configured ad-rec/RL metric families)",
     "vorotilov2023scaling": "Engagement, session metrics (Instagram Explore)",
     "vouros2022explainable": "Synthetic RL task reward (XRL survey with examples)",
     "wen2019learning": "Multi-objective reward components, user utility",
@@ -1791,6 +1801,8 @@ def notes_for(key: str, metrics: str, reports: str, audit_keys: set[str]) -> str
     if key in audit_keys and key not in MANUAL_METRICS:
         return "Verified in evaluation_audit.md"
     if reports == "❌ No":
+        if metrics.startswith("N/A") and "outside configured" in metrics:
+            return metrics
         return "No empirical metrics reported"
     if reports == "⚠️ Partial":
         return "Synthesizes metrics from other papers"
@@ -1830,36 +1842,62 @@ def render_matrix_table_rows(rows: list) -> tuple[str, int]:
         "notes": "240px",
     }
 
-    def th(col_id: str, label: str, *, center: bool = False, metric: bool = False) -> str:
-        cls_parts = []
+    def _filter_menu_inner(col_id: str, kind: str) -> str:
+        """Per-kind body for a column's filter dropdown."""
+        if kind in ("marker", "enum"):
+            if kind == "enum":
+                opts = [
+                    ("yes", "✅ Yes"),
+                    ("partial", "⚠️ Partial"),
+                    ("no", "❌ No"),
+                ]
+            else:
+                opts = [("check", "✓ Yes")]
+                if col_id in FAMILY_IDS:
+                    opts.append(("survey", "↺ Survey"))
+                opts.append(("empty", "— No"))
+            return "".join(
+                f'<label><input type="checkbox" checked data-val="{val}"> {html.escape(text)}</label>'
+                for val, text in opts
+            )
+        if kind == "number":
+            return (
+                '<div class="filter-num">'
+                '<label>Min <input type="number" class="filter-min" step="any"></label>'
+                '<label>Max <input type="number" class="filter-max" step="any"></label>'
+                "</div>"
+            )
+        # text
+        return (
+            '<input type="search" class="filter-text" '
+            'placeholder="Contains\u2026" aria-label="Filter text">'
+        )
+
+    def th(col_id: str, label: str, kind: str, *, center: bool = False) -> str:
+        cls_parts = ["sortable-col"]
         if center:
             cls_parts.append("center")
-        if metric:
+        if kind == "marker":
             cls_parts.append("metric-col")
-            cls_parts.append("filterable")
-        cls = f' class="{" ".join(cls_parts)}"' if cls_parts else ""
-        if metric:
-            return (
-                f'<th{cls} data-col="{col_id}">'
-                f'<div class="th-inner">'
-                f'<span class="th-label">{html.escape(label)}</span>'
-                f'<button type="button" class="filter-btn" data-col="{col_id}" '
-                f'aria-label="Filter {html.escape(label)}" title="Filter column">▾</button>'
-                f"</div>"
-                f'<div class="filter-menu" data-col="{col_id}" hidden>'
-                f'<label><input type="checkbox" checked data-val="check"> ✓ Yes</label>'
-                f'<label><input type="checkbox" checked data-val="empty"> — No</label>'
-                + (
-                    f'<label><input type="checkbox" checked data-val="survey"> ↺ Survey</label>'
-                    if col_id in FAMILY_IDS
-                    else ""
-                )
-                + f'<div class="filter-menu-actions">'
-                f'<button type="button" class="filter-apply">Apply</button>'
-                f'<button type="button" class="filter-clear">Clear</button>'
-                f"</div></div></th>"
-            )
-        return f'<th{cls} data-col="{col_id}">{html.escape(label)}</th>'
+        cls = f' class="{" ".join(cls_parts)}"'
+        menu_inner = _filter_menu_inner(col_id, kind)
+        return (
+            f'<th{cls} data-col="{col_id}" data-kind="{kind}">'
+            f'<div class="th-inner">'
+            f'<span class="th-label sort-btn" data-col="{col_id}" role="button" '
+            f'tabindex="0" title="Sort column">'
+            f'{html.escape(label)}<span class="sort-ind" aria-hidden="true"></span>'
+            f"</span>"
+            f'<button type="button" class="filter-btn" data-col="{col_id}" '
+            f'aria-label="Filter {html.escape(label)}" title="Filter column">▾</button>'
+            f"</div>"
+            f'<div class="filter-menu" data-col="{col_id}" data-kind="{kind}" hidden>'
+            f"{menu_inner}"
+            f'<div class="filter-menu-actions">'
+            f'<button type="button" class="filter-apply">Apply</button>'
+            f'<button type="button" class="filter-clear">Clear</button>'
+            f"</div></div></th>"
+        )
 
     def td(col_id: str, content: str, *, center: bool = False, metric: bool = False, val: str = "") -> str:
         cls_parts = []
@@ -1871,22 +1909,36 @@ def render_matrix_table_rows(rows: list) -> tuple[str, int]:
         extra = f' data-metric-val="{val}"' if metric else ""
         return f'<td{cls} data-col="{col_id}"{extra}>{content}</td>'
 
+    column_kinds: dict[str, str] = {
+        "num": "number",
+        "cite-count": "number",
+        "key": "text",
+        "title": "text",
+        "affiliation": "text",
+        "reports": "enum",
+        **{eid: "marker" for eid in EVAL_MODALITY_IDS},
+        **{fid: "marker" for fid in FAMILY_IDS},
+        "ctr-detail": "text",
+        "rl-detail": "text",
+        "notes": "text",
+    }
+
     header = (
         "<tr>"
-        + th("num", "#")
-        + th("cite-count", "Cites", center=True)
-        + th("key", "Citation Key")
-        + th("title", "Title")
-        + th("affiliation", "Affiliation")
-        + th("reports", "Reports?", center=True)
+        + th("num", "#", "number", center=True)
+        + th("cite-count", "Cites", "number", center=True)
+        + th("key", "Citation Key", "text")
+        + th("title", "Title", "text")
+        + th("affiliation", "Affiliation", "text")
+        + th("reports", "Reports?", "enum", center=True)
         + "".join(
-            th(eid, label, center=True, metric=True)
+            th(eid, label, "marker", center=True)
             for eid, label in EVAL_MODALITY_COLS
         )
-        + "".join(th(fid, label, center=True, metric=True) for fid, label in METRIC_FAMILIES)
-        + th("ctr-detail", "CTR / clicks (how & value)")
-        + th("rl-detail", "RL reward / return (how & value)")
-        + th("notes", "Notes")
+        + "".join(th(fid, label, "marker", center=True) for fid, label in METRIC_FAMILIES)
+        + th("ctr-detail", "CTR / clicks (how & value)", "text")
+        + th("rl-detail", "RL reward / return (how & value)", "text")
+        + th("notes", "Notes", "text")
         + "</tr>"
     )
 
@@ -1945,10 +1997,12 @@ def render_matrix_table_rows(rows: list) -> tuple[str, int]:
         )
 
     total_min = sum(int(v.replace("px", "")) for v in col_widths.values())
+    kinds_json = json.dumps(column_kinds, ensure_ascii=False).replace("<", "\\u003c")
     table = (
         f'<table id="citation-matrix" class="matrix" style="min-width:{total_min}px">\n'
         f"<thead>\n{header}\n</thead>\n"
-        f"<tbody>\n" + "\n".join(body_rows) + "\n</tbody>\n</table>"
+        f"<tbody>\n" + "\n".join(body_rows) + "\n</tbody>\n</table>\n"
+        f'<script type="application/json" id="column-kinds">{kinds_json}</script>'
     )
     return table, total_min
 
@@ -2018,7 +2072,7 @@ def render_filter_toolbar() -> str:
   </details>
   <details class="filter-panel">
     <summary>Filter rows by metric (used with “Must match selected metrics” preset)</summary>
-    <p class="filter-hint">Check metrics a paper must report. Use column-header ▾ menus for per-column value filters (✓ / ↺ / —).</p>
+    <p class="filter-hint">Spreadsheet-style controls: <strong>click any column header</strong> to sort (ascending → descending → original), and use the column-header <strong>▾</strong> menu to filter that column (✓/↺/— or Yes/Partial/No checkboxes, a “contains” box for text columns, or min/max for numeric columns like Cites). Check metrics below a paper must report for the “Must match selected metrics” preset.</p>
     <div class="filter-actions">
       <button type="button" id="require-clear">Clear selection</button>
       <button type="button" id="preset-apply">Apply row filter</button>
@@ -2479,8 +2533,8 @@ def render_full_html(
     font-size: 13px;
   }}
 
-  /* Column header filters */
-  table.matrix th.filterable {{ position: relative; padding: 0; }}
+  /* Column header sort + filters (all matrix columns) */
+  table.matrix th {{ position: relative; padding: 0; }}
   .th-inner {{
     display: flex;
     align-items: flex-start;
@@ -2490,6 +2544,34 @@ def render_full_html(
     min-height: 100%;
   }}
   .th-label {{ flex: 1; }}
+  .th-label.sort-btn {{
+    cursor: pointer;
+    user-select: none;
+    border-radius: 3px;
+  }}
+  .th-label.sort-btn:hover {{ color: var(--accent); }}
+  .th-label.sort-btn:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 1px; }}
+  .th-label.sort-btn.sorted {{ color: var(--accent); }}
+  .sort-ind {{ color: var(--accent); font-size: 11px; font-weight: 700; }}
+  .filter-num {{ display: flex; flex-direction: column; gap: 6px; }}
+  .filter-num label {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 13px;
+  }}
+  .filter-menu input.filter-text,
+  .filter-menu input.filter-min,
+  .filter-menu input.filter-max {{
+    width: 150px;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 13px;
+  }}
+  .filter-num input.filter-min,
+  .filter-num input.filter-max {{ width: 90px; }}
   .filter-btn {{
     flex-shrink: 0;
     border: none;
@@ -2915,19 +2997,48 @@ def render_full_html(
     return;
   }}
 
-  const filterColIds = [...evalModalityIds, ...familyIds];
+  const columnKindsEl = document.getElementById('column-kinds');
+  let columnKinds = {{}};
+  try {{
+    if (columnKindsEl) columnKinds = JSON.parse(columnKindsEl.textContent);
+  }} catch (err) {{
+    console.error('Citation matrix: failed to parse column kinds', err);
+  }}
+
   const tbody = table.querySelector('tbody');
   if (!tbody) return;
   const rows = Array.from(tbody.querySelectorAll('tr'));
   const totalRows = rows.length;
+  const originalOrder = rows.slice();
 
-  // Per-column value filters: colId -> Set of allowed vals
-  const colFilters = Object.fromEntries(filterColIds.map(id => [id, new Set()]));
-  for (const eid of evalModalityIds) {{
-    colFilters[eid] = new Set(['check', 'empty']);
+  function markerDefaults(col) {{
+    if (evalModalityIds.includes(col)) return ['check', 'empty'];
+    if (familyIds.includes(col)) return ['check', 'survey', 'empty'];
+    if (col === 'reports') return ['yes', 'partial', 'no'];
+    return [];
   }}
-  for (const fid of familyIds) {{
-    colFilters[fid] = new Set(['check', 'survey', 'empty']);
+
+  // Per-column filter state, keyed by column kind.
+  const setFilters = {{}};   // marker / enum -> Set of allowed values
+  const textFilters = {{}};  // text          -> lowercased substring
+  const numFilters = {{}};   // number        -> {{ min, max }}
+  Object.keys(columnKinds).forEach(col => {{
+    const kind = columnKinds[col];
+    if (kind === 'marker' || kind === 'enum') setFilters[col] = new Set(markerDefaults(col));
+    else if (kind === 'text') textFilters[col] = '';
+    else if (kind === 'number') numFilters[col] = {{ min: null, max: null }};
+  }});
+
+  function cellEl(tr, col) {{ return tr.querySelector('[data-col="' + col + '"]'); }}
+  function cellText(tr, col) {{ const el = cellEl(tr, col); return (el ? el.textContent : '').trim(); }}
+  function cellNumber(tr, col) {{
+    const raw = cellText(tr, col).replace(/[^0-9.\\-]/g, '');
+    const n = parseFloat(raw);
+    return isNaN(n) ? null : n;
+  }}
+  function markerValue(tr, col, kind) {{
+    if (kind === 'enum') return tr.getAttribute('data-reports') || 'no';
+    return tr.getAttribute('data-m-' + col) || 'empty';
   }}
 
   function getVisibleCols() {{
@@ -2967,12 +3078,25 @@ def render_full_html(
   }}
 
   function rowMatchesColFilters(tr) {{
-    for (const col of filterColIds) {{
-      const allowed = colFilters[col];
-      const maxSize = evalModalityIds.includes(col) ? 2 : 3;
-      if (allowed.size === maxSize) continue;
-      const val = tr.getAttribute('data-m-' + col) || 'empty';
-      if (!allowed.has(val)) return false;
+    for (const col in columnKinds) {{
+      const kind = columnKinds[col];
+      if (kind === 'marker' || kind === 'enum') {{
+        const allowed = setFilters[col];
+        if (!allowed) continue;
+        if (allowed.size === markerDefaults(col).length) continue;
+        if (!allowed.has(markerValue(tr, col, kind))) return false;
+      }} else if (kind === 'text') {{
+        const q = textFilters[col];
+        if (q && !cellText(tr, col).toLowerCase().includes(q)) return false;
+      }} else if (kind === 'number') {{
+        const f = numFilters[col];
+        if (f && (f.min !== null || f.max !== null)) {{
+          const v = cellNumber(tr, col);
+          if (v === null) return false;
+          if (f.min !== null && v < f.min) return false;
+          if (f.max !== null && v > f.max) return false;
+        }}
+      }}
     }}
     return true;
   }}
@@ -3066,7 +3190,65 @@ def render_full_html(
     applyFilters();
   }});
 
-  // Column header filter menus
+  // ---- Sorting (click any header: ascending -> descending -> original) ----
+  let sortState = {{ col: null, dir: 0 }};
+  const sortRank = {{
+    marker: {{ empty: 0, survey: 1, check: 2 }},
+    enum: {{ no: 0, partial: 1, yes: 2 }},
+  }};
+  function sortValue(tr, col, kind) {{
+    if (kind === 'number') {{ const v = cellNumber(tr, col); return v === null ? -Infinity : v; }}
+    if (kind === 'marker' || kind === 'enum') {{
+      const rank = sortRank[kind] || {{}};
+      const v = markerValue(tr, col, kind);
+      return (v in rank) ? rank[v] : -1;
+    }}
+    return cellText(tr, col).toLowerCase();
+  }}
+  function applySort() {{
+    let ordered;
+    if (!sortState.col || sortState.dir === 0) {{
+      ordered = originalOrder;
+    }} else {{
+      const col = sortState.col;
+      const kind = columnKinds[col] || 'text';
+      const dir = sortState.dir;
+      ordered = originalOrder.slice().sort((a, b) => {{
+        const va = sortValue(a, col, kind);
+        const vb = sortValue(b, col, kind);
+        let cmp;
+        if (typeof va === 'number' && typeof vb === 'number') cmp = va - vb;
+        else cmp = String(va).localeCompare(String(vb), undefined, {{ numeric: true }});
+        return cmp * dir;
+      }});
+    }}
+    const frag = document.createDocumentFragment();
+    ordered.forEach(tr => frag.appendChild(tr));
+    tbody.appendChild(frag);
+    updateSortIndicators();
+  }}
+  function updateSortIndicators() {{
+    table.querySelectorAll('.sort-btn').forEach(btn => {{
+      const ind = btn.querySelector('.sort-ind');
+      const active = btn.dataset.col === sortState.col && sortState.dir !== 0;
+      btn.classList.toggle('sorted', active);
+      if (ind) ind.textContent = active ? (sortState.dir === 1 ? ' \\u25B2' : ' \\u25BC') : '';
+    }});
+  }}
+  function cycleSort(col) {{
+    if (sortState.col !== col) sortState = {{ col: col, dir: 1 }};
+    else if (sortState.dir === 1) sortState = {{ col: col, dir: -1 }};
+    else sortState = {{ col: null, dir: 0 }};
+    applySort();
+  }}
+  table.querySelectorAll('.sort-btn').forEach(btn => {{
+    btn.addEventListener('click', () => cycleSort(btn.dataset.col));
+    btn.addEventListener('keydown', e => {{
+      if (e.key === 'Enter' || e.key === ' ') {{ e.preventDefault(); cycleSort(btn.dataset.col); }}
+    }});
+  }});
+
+  // ---- Column header filter menus (toggle open/close) ----
   document.querySelectorAll('.filter-btn').forEach(btn => {{
     btn.addEventListener('click', (e) => {{
       e.stopPropagation();
@@ -3078,35 +3260,71 @@ def render_full_html(
       if (!open) {{
         menu.hidden = false;
         btn.classList.add('active');
+        const focusable = menu.querySelector('input[type="search"], input[type="number"]');
+        if (focusable) focusable.focus();
       }}
     }});
   }});
 
   document.querySelectorAll('.filter-menu').forEach(menu => {{
     const col = menu.dataset.col;
-    menu.querySelector('.filter-apply').addEventListener('click', () => {{
-      const allowed = new Set();
-      menu.querySelectorAll('input[data-val]').forEach(inp => {{
-        if (inp.checked) allowed.add(inp.dataset.val);
+    const kind = menu.dataset.kind || columnKinds[col] || 'text';
+    const applyBtn = menu.querySelector('.filter-apply');
+    const clearBtn = menu.querySelector('.filter-clear');
+    const filterBtn = menu.closest('th').querySelector('.filter-btn');
+    function markActive(active) {{ if (filterBtn) filterBtn.classList.toggle('active', active); }}
+
+    function commit() {{
+      if (kind === 'marker' || kind === 'enum') {{
+        const allowed = new Set();
+        menu.querySelectorAll('input[data-val]').forEach(inp => {{
+          if (inp.checked) allowed.add(inp.dataset.val);
+        }});
+        const defs = markerDefaults(col);
+        setFilters[col] = allowed.size ? allowed : new Set(defs);
+        markActive(setFilters[col].size < defs.length);
+      }} else if (kind === 'text') {{
+        const inp = menu.querySelector('.filter-text');
+        textFilters[col] = (inp ? inp.value : '').trim().toLowerCase();
+        markActive(!!textFilters[col]);
+      }} else if (kind === 'number') {{
+        const minEl = menu.querySelector('.filter-min');
+        const maxEl = menu.querySelector('.filter-max');
+        const minV = minEl ? minEl.value : '';
+        const maxV = maxEl ? maxEl.value : '';
+        numFilters[col] = {{
+          min: minV === '' ? null : parseFloat(minV),
+          max: maxV === '' ? null : parseFloat(maxV),
+        }};
+        markActive(numFilters[col].min !== null || numFilters[col].max !== null);
+      }}
+      menu.hidden = true;
+      applyFilters();
+    }}
+
+    function reset() {{
+      if (kind === 'marker' || kind === 'enum') {{
+        menu.querySelectorAll('input[data-val]').forEach(inp => {{ inp.checked = true; }});
+        setFilters[col] = new Set(markerDefaults(col));
+      }} else if (kind === 'text') {{
+        const inp = menu.querySelector('.filter-text');
+        if (inp) inp.value = '';
+        textFilters[col] = '';
+      }} else if (kind === 'number') {{
+        menu.querySelectorAll('input').forEach(inp => {{ inp.value = ''; }});
+        numFilters[col] = {{ min: null, max: null }};
+      }}
+      markActive(false);
+      menu.hidden = true;
+      applyFilters();
+    }}
+
+    if (applyBtn) applyBtn.addEventListener('click', commit);
+    if (clearBtn) clearBtn.addEventListener('click', reset);
+    menu.querySelectorAll('input[type="search"], input[type="number"]').forEach(inp => {{
+      inp.addEventListener('keydown', e => {{
+        if (e.key === 'Enter') {{ e.preventDefault(); commit(); }}
       }});
-      const maxSize = evalModalityIds.includes(col) ? 2 : 3;
-      const defaults = evalModalityIds.includes(col)
-        ? ['check', 'empty']
-        : ['check', 'survey', 'empty'];
-      colFilters[col] = allowed.size ? allowed : new Set(defaults);
-      menu.hidden = true;
-      menu.closest('th').querySelector('.filter-btn').classList.toggle('active', allowed.size < maxSize);
-      applyFilters();
-    }});
-    menu.querySelector('.filter-clear').addEventListener('click', () => {{
-      menu.querySelectorAll('input[data-val]').forEach(inp => {{ inp.checked = true; }});
-      const maxSize = evalModalityIds.includes(col) ? 2 : 3;
-      colFilters[col] = evalModalityIds.includes(col)
-        ? new Set(['check', 'empty'])
-        : new Set(['check', 'survey', 'empty']);
-      menu.hidden = true;
-      menu.closest('th').querySelector('.filter-btn').classList.remove('active');
-      applyFilters();
     }});
   }});
 
