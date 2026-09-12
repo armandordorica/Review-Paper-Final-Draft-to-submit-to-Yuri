@@ -318,7 +318,10 @@ ACM Reference Format conventionally uses **sentence case** for paper/article tit
 ### R2-REF3 — Duplicate Kang & McAuley 2018 (AE)
 
 **Status:** DONE (12-Sep-2026). Kept `kang2018sasrec`; retargeted `\cite{Kang2018}`;
-removed duplicate bib entry; IEEE Xplore URL.
+removed duplicate bib entry; IEEE Xplore URL. Verified single References entry
+(no 2018a/2018b) after refreshing local `paper.pdf`. Also removed uncited
+exact clone `zhou2019deep` of `Zhou2019`; no other cited same-paper duplicates
+found (DIN vs DIEN and other 2018a/b pairs are distinct works).
 
 ---
 
